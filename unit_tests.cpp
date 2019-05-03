@@ -75,11 +75,7 @@ void loadInput(char** argv) {
 int findMax(std::string yVal) {
   int num = 0, currMax = 0;
   for (int i = 0; i<yVal.length(); i++) {
-<<<<<<< HEAD
     if (yVal[i] >= '0' && yVal[i] <= '9'){
-=======
-    if (yVal[i] >= '0' && yVal[i] >= '9'){
->>>>>>> 4f55f75e7b3f0c85a85bb989cb70201f0c506b6d
       num = num * 10 + (yVal[i] - '0');
     } else {
       currMax = std::max(currMax, num);

@@ -1,8 +1,7 @@
-#include "qwirkle.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #define EXIT_SUCCESS     0
 #define REQUIRED_ARGS    1
@@ -10,7 +9,6 @@
 void checkArgs(int argc, char** argv);
 void checkFile(std::string &filename);
 void loadInput(char** argv);
-void loadInput();
 int findMax(std::string yVal);
 
 int main(int argc, char** argv) {
@@ -24,20 +22,17 @@ int main(int argc, char** argv) {
   return EXIT_SUCCESS;
 }
 
+// Checks that there are the correct number of command line arguments and that
+// both input and output files exist
 void checkArgs(int argc, char** argv) {
   if(argc != REQUIRED_ARGS + 1) {
     throw std::runtime_error("Incorrect no. of file names provided");
   }
 
   std::string inputFilename = argv[1] + std::string(".in");
-  std::string outputFilename = argv[1] + std::string(".out");
-
   checkFile(inputFilename);
-  checkFile(outputFilename);
 }
 
-// Checks that there are the correct number of command line arguments
-// and that both input and output files exist
 void checkFile(std::string &filename) {
   std::ifstream in;
   in.open(filename);
@@ -46,32 +41,111 @@ void checkFile(std::string &filename) {
   }
   in.close();
 }
+
 // Sets up inital state of the game for actions to be preformed on
 void loadInput(char** argv) {
-  std::string inputFilename = argv[1] + std::string(".in");
+  std::string filename = argv[1] + std::string(".in");
   std::ifstream in;
+  in.open(filename);
 
-
+  // Reading player 1 and 2 data from file.
+  // Loop runs twice to load in data for each player
   for (int i = 0; i < 2; i++) {
     std::string playerName;
-    in >> playerName;
-    // call add player method
+    std::getline(in, playerName);
+    // CALL ADD PLAYER METHOD HERE
+    std::cout << "Player " << i + 1 << " name: "<<  playerName << std::endl;
 
-    int playerScore;
-    in >> playerScore;
-    // call set player score method
+    std::string playerScoreString;
+    std::getline(in, playerScoreString);
+    int playerScore = std::stoi(playerScoreString);
+    // CALL SET PLAYER SCORE HERE
+    std::cout << "Player " << i + 1 << " score: "<<  playerScore << std::endl;
 
     std::string playerHand;
-    in >> playerHand;
-    //while loop to add all cards in string to player hand
+    std::getline(in, playerHand);
+    std::cout << "Player " << i + 1 << " hand: "<<  playerHand << std::endl;
+    // while loop to add all tiles in the string to player hand.
+    std::istringstream playerHandStream(playerHand);
+    std::string tile;
+    while (std::getline(playerHandStream, tile, ',')) {
+      // CALL ADD TILE TO PLAYER HAND METHOD
+      std::cout << tile << std::endl;
+    }
   }
 
-    //board reading
+  // Reading board state from file.
+  std::string boardRow;
+  // Skips over first two lines that contain no useful information.
+  std::getline(in, boardRow);
+  std::getline(in, boardRow);
+  // Loop runs for the number of rows of the board
+  for (int i = 0; i < 26; i++) {
+    std::getline(in, boardRow);
+    std::cout << boardRow << std::endl;
+    // Begins scanning the single row, checking if each 'space' is empty.
+    // 'k' value used for keeping track of the currnt column (x value) the
+    // program is at. Current row (y value) is 'i'.
+    int k = 0;
+    for (int j = 3; j < boardRow.length() - 1; j += 3) {
+      if (boardRow.at(j) != ' ') {
+        // CALL ADD TITLE TO BOARD METHOD HERE
+        std::cout << "Found tile at " << i << ", " << k << ": " <<
+          boardRow.at(j) << boardRow.at(j + 1) << std::endl;
+      }
+      k++;
+    }
+  }
 
+  // Reading the tile bag form file
+  std::string tileBag;
+  std::getline(in, tileBag);
+  std::cout << tileBag << std::endl;
+  // while loop to add all tiles in the string to tile bag
+  std::istringstream tileBagStream(tileBag);
+  std::string tile;
+  while (std::getline(tileBagStream, tile, ',')) {
+    // CALL ADD TILE TO TIL BAG METHOD HERE
+    std::cout << tile << std::endl;
+  }
 
+  // Reading the current player from file
+  std::string currentPlayer;
+  std::getline(in, currentPlayer);
+  std::cout << "Current player: " << currentPlayer << std::endl;
+  // CALL SET CURRENT PLAYER TURN METHOD HEREE
+
+  // Reading and processing commands from file
+  std::string command;
+  while(std::getline(in, command)) {
+    std::cout << command << std::endl;
+    std::istringstream commandStream(command);
+    std::string action;
+    std::getline(commandStream, action, ' ');
+    if (action == "place") {
+      std::string tileToPlace;
+      std::getline(commandStream, tileToPlace, ' ');
+      std::string coordinate;
+      std::getline(commandStream, coordinate, ' ');
+      std::getline(commandStream, coordinate, ' ');
+      // CALL PLACE TILE METHOD FOR CURRENT PLAYER HERE
+    }
+    else if (action == "replace") {
+      std::string tileToReplace;
+      std::getline(commandStream, tileToReplace, ' ');
+      // CALL REPLACE TILE METHOD FOR CURRENT PLAYER HERE
+    }
+    else if (action == "save") {
+      std::string filename;
+      std::getline(commandStream, filename, ' ');
+      // CALL SAVE GAME METHOD HERE
+      //   pass in 'filename'
+    }
+  }
+  in.close();
 }
 
-//finds the largest Y length for the board
+// Finds the largest Y length for the board
 int findMax(std::string yVal) {
   int num = 0, currMax = 0;
   for (int i = 0; i<yVal.length(); i++) {
@@ -84,10 +158,4 @@ int findMax(std::string yVal) {
     }
   }
   return std::max(currMax, num);
-}
-
-// Checks wether the expected output matches the quirkle games saved
-// data
-void loadOutput() {
-
 }

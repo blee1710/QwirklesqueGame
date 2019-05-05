@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+#inclide "GameEngine.h"
+
 #define EXIT_SUCCESS     0
 #define REQUIRED_ARGS    1
 
@@ -12,6 +14,8 @@ void loadInput(char** argv);
 int findMax(std::string yVal);
 
 int main(int argc, char** argv) {
+  GameEngine gameEngine = new GameEngine();
+
   try {
       checkArgs(argc, argv);
       loadInput(argv);

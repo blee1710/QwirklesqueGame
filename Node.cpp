@@ -11,5 +11,4 @@ Node::Node(Node& other) :
 tile(other.tile),
 next()
 {
-   // TODO
 }

@@ -9,10 +9,10 @@ public:
 
    LinkedList();
    ~LinkedList();
-   addFront(Tile* tile);
-   addBack(Tile* tile);
-   deleteFront();
-   deleteBack();
+   void addFront(Tile* tile);
+   void addBack(Tile* tile);
+   void deleteFront();
+   void deleteBack();
 
 private:
    Node* head;

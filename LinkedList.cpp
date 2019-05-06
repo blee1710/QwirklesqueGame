@@ -8,7 +8,7 @@ tail(nullptr)
    // TODO
 }
 
-LinkedList::~LinkedList(LinkedList& other) {
+LinkedList::~LinkedList() {
 }
 
 void LinkedList::addFront(Tile* tile) {

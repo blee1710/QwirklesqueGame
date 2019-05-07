@@ -2,30 +2,44 @@
 #ifndef ASSIGN2_GAME_ENGINE_H
 #define ASSIGN2_GAME_ENGINE_H
 
-#define BOARD_SIZE  26
-
 #include <string>
 
 #include "LinkedList.h"
+#include "Player.h"
 #include "Tile.h"
 
-class GameEngine {
+class GameEngine
+{
 public:
-
+  //Setup Functions
   GameEngine();
   ~GameEngine();
   void saveGame(std::string filename);
   void loadGame(std::string filename);
-  bool placeTile(Tile* tile, int x, int y);
-  bool replaceTile(Tile* tile);
-  void print();
-  
-private:
+  void addTile(Tile tile);
 
-  Tile* board[BOARD_SIZE][BOARD_SIZE];
+  //Game Functions
+  void addPlayer(std::string);
+  void placeTile(Tile tile, char letter, int number);
+  void replaceTile();
+
+  //NewGame Functions
+  void drawInitialTiles();
+  void mainLoop();
+  void alternateTurns();
+  void printBoard();
+
+  //Other Functions
+  int letterToNumber(char letter);
+  char numberToLetter(int number);
+
+
+private:
   LinkedList tileBag;
-  LinkedList player1Hand;
-  LinkedList player2Hand;
+  Player* currentPlayer;
+  Player* playerArray[2];
+  int numPlayers;
+  Tile board[][26];
 };
 
 #endif // ASSIGN2_GAME_ENGINE_H

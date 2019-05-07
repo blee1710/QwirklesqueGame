@@ -1,23 +1,23 @@
 #include "GameEngine.h"
-
 #include <iostream>
 #include <string>
 #include <fstream>
 
-GameEngine::GameEngine() {
-  for (int y = 0; y < BOARD_SIZE; y++) {
-    for(int x = 0; x < BOARD_SIZE; x++) {
-      board[y][x] = nullptr;
-    }
-  }
+#define BOARD_SIZE 26
+
+GameEngine::GameEngine()
+{
+  std::cout << "ENGINE CREATED" << std::endl;
+  numPlayers = 0;
 }
 
-GameEngine::~GameEngine() {
-
+GameEngine::~GameEngine()
+{
 }
 
 // Barebones imlementation of saveGame method.
-void GameEngine::saveGame(std::string filename) {
+void GameEngine::saveGame(std::string filename)
+{
   std::ofstream outFile;
   outFile.open(filename);
 
@@ -35,20 +35,24 @@ void GameEngine::saveGame(std::string filename) {
 
   // Writing out board to file
   outFile << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20"
-  << " 22 23 24 25" << std::endl;
+          << " 22 23 24 25" << std::endl;
   outFile << "-----------------------------------------------------------------"
-  << "----------------" << std::endl;
+          << "----------------" << std::endl;
 
-  for (int i = 0; i < BOARD_SIZE; i++) {
+  for (int i = 0; i < BOARD_SIZE; i++)
+  {
     // ASCII character table states that capital letters begin at 65, so with
     // each iteration the character goes up (From 'A' to 'B' to 'C'...).
     char letter = i + 65;
     outFile << letter << " |";
-    for (int j = 0; j < BOARD_SIZE; j++) {
-      if(/*board[i][j] != null*/0) {
+    for (int j = 0; j < BOARD_SIZE; j++)
+    {
+      if (/*board[i][j] != null*/ 0)
+      {
         outFile << /*board[i][j] << */ "|";
       }
-      else {
+      else
+      {
         outFile << "  |";
       }
     }
@@ -64,26 +68,111 @@ void GameEngine::saveGame(std::string filename) {
   outFile.close();
 }
 
-void GameEngine::loadGame(std::string filename) {
-
+void GameEngine::loadGame(std::string filename)
+{
 }
 
-bool GameEngine::placeTile(Tile* tile, int x, int y) {
-  bool tilePlaced = false;
+void GameEngine::addPlayer(std::string name)
+{
+  playerArray[numPlayers] = new Player(name);
+  numPlayers++;
+}
 
-  if (board[y][x] == nullptr) {
-    board[y][x] = tile;
-    tilePlaced = true;
+void GameEngine::placeTile(Tile tile, char letter, int y)
+{
+  //Check if tile exists in player's hand (using getter from Player)
+  //currentPlayer.getLinkedList() etc
+
+  //Puts the tile in the corresponding position
+  int x = letterToNumber(letter);
+  board[x][y] = tile;
+}
+
+void GameEngine::replaceTile()
+{
+}
+
+//Function for converting A to 0, B to 1 etc.
+int GameEngine::letterToNumber(char letter)
+{
+  int index;
+  char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  for (int i = 0; i < 26; i++)
+  {
+    if (letter = alphabet[i])
+    {
+      index = i;
+      //Early termination
+      i = 26;
+    }
   }
-
-  return tilePlaced;
+  return index;
 }
 
-bool GameEngine::replaceTile(Tile* tile) {
-  bool tilePlaced = false;
-  return tilePlaced;
+//Function for converting A to 0, B to 1 etc.
+char GameEngine::numberToLetter(int number)
+{
+  char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  return alphabet[number];
 }
 
-void GameEngine::print() {
-  std::cout << "ENGINE CREATED" << std::endl;
+//Adds a tile to the tile bag(end of linked list)
+//Ideally can call this when generating initial tiles in tileBag and also when replacing.
+void GameEngine::addTile(Tile tile)
+{
+  //tilebag.addTile() etc
+}
+
+//All players populate their hands
+void GameEngine::drawInitialTiles()
+{
+  for (Player *p : playerArray)
+  {
+    for (int i = 0; i < 6; i++)
+    {
+      p->drawTile();
+    }
+  }
+}
+
+//The main loop between player's turns.
+void GameEngine::mainLoop()
+{
+  // while(tileBag.getHead() != null && currentPlayer->getHand().getHead() != null)
+  currentPlayer = playerArray[0];
+
+  std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
+  for (int i = 0; i < numPlayers; i++)
+  {
+    std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+  }
+}
+
+void GameEngine::alternateTurns()
+{
+  if (currentPlayer = playerArray[0])
+  {
+    currentPlayer = playerArray[1];
+  }
+  else
+  {
+    currentPlayer = playerArray[0];
+  }
+}
+
+void GameEngine::printBoard()
+{
+  std::cout << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25" << std::endl;
+  std::cout << "---------------------------------------------------------------------------------" << std::endl;
+  //Print all 26 rows
+  for (int i = 0; i < 26; i++)
+  {
+    char letter = numberToLetter(i);
+    std::cout << letter << " ";
+    for (int j = 0; j < 26; j++)
+    {
+      std::cout << "|" << board[i][j].toString();
+    }
+    std::cout << "|" << std::endl;
+  }
 }

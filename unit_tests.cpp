@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-#inclide "GameEngine.h"
+#include "GameEngine.h"
 
 #define EXIT_SUCCESS     0
 #define REQUIRED_ARGS    1

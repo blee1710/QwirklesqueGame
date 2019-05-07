@@ -4,10 +4,12 @@
 #include <string>
 #include <fstream>
 
-#define BOARD_SIZE  26
-
 GameEngine::GameEngine() {
-
+  for (int y = 0; y < BOARD_SIZE; y++) {
+    for(int x = 0; x < BOARD_SIZE; x++) {
+      board[y][x] = nullptr;
+    }
+  }
 }
 
 GameEngine::~GameEngine() {
@@ -66,7 +68,22 @@ void GameEngine::loadGame(std::string filename) {
 
 }
 
-void GameEngine::print()
-{
+bool GameEngine::placeTile(Tile* tile, int x, int y) {
+  bool tilePlaced = false;
+
+  if (board[y][x] == nullptr) {
+    board[y][x] = tile;
+    tilePlaced = true;
+  }
+
+  return tilePlaced;
+}
+
+bool GameEngine::replaceTile(Tile* tile) {
+  bool tilePlaced = false;
+  return tilePlaced;
+}
+
+void GameEngine::print() {
   std::cout << "ENGINE CREATED" << std::endl;
 }

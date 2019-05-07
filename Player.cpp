@@ -1,11 +1,8 @@
+#include <string>
 
-class Player {
-public:
-   std::string name;
-   Player(std::string name);
-};
+#include "Player.h"
 
-Player::Player(Name name)
+Player::Player(std::string name)
 {
     this->name = name;
 }

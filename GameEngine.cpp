@@ -1,9 +1,18 @@
 #include "GameEngine.h"
 
+#include <iostream>
 #include <string>
 #include <fstream>
 
 #define BOARD_SIZE  26
+
+GameEngine::GameEngine() {
+
+}
+
+GameEngine::~GameEngine() {
+
+}
 
 // Barebones imlementation of saveGame method.
 void GameEngine::saveGame(std::string filename) {
@@ -55,4 +64,9 @@ void GameEngine::saveGame(std::string filename) {
 
 void GameEngine::loadGame(std::string filename) {
 
+}
+
+void GameEngine::print()
+{
+  std::cout << "ENGINE CREATED" << std::endl;
 }

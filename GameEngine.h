@@ -13,9 +13,10 @@ public:
   ~GameEngine();
   void saveGame(std::string filename);
   void loadGame(std::string filename);
-
-private:
   
+  void print();
+private:
+
   LinkedList tileBag;
   LinkedList player1Hand;
   LinkedList player2Hand;

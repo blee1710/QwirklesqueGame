@@ -15,10 +15,10 @@ prev(other.prev)
 {
 }
 
-std::string Node::Node toString(){
-  return tile.toString();
+std::string Node::toString(){
+  return tile->toString();
 }
 
-Tile* getTile(){
+Tile* Node::getTile() {
   return tile;
 }

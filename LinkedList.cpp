@@ -53,10 +53,10 @@ void LinkedList::deleteBack() {
 //code to return nodes as a string
 std::string LinkedList::toString() {
   std::string listString;
-  for(i = 0; i < size; i++) {
+  for(int i = 0; i < size; i++) {
     Node* curr = head;
-    listString += (curr->toString() + " ")
-    curr = curr->next
+    listString += (curr->toString() + " ");
+    curr = curr->next;
   }
   return listString;
 }
@@ -71,8 +71,8 @@ int LinkedList::getSize() {
 // to remove from the list as well
 Node* LinkedList::getNode(Tile* tile) {
   Node* curr = head;
-  for(i = 0; i < size; i++){
-    if (curr->getTile() == tile){
+  for(int i = 0; i < size; i++) {
+    if (curr->getTile() == tile) {
       return curr;
     } else {
       curr = curr->next;

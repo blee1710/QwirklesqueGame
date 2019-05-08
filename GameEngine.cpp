@@ -1,4 +1,6 @@
 #include "GameEngine.h"
+#include "TileCodes.h"
+#include "LinkedList.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -181,16 +183,16 @@ void GameEngine::printBoard()
   }
 }
 
-LinkedList GameEngine::makeBag()
+LinkedList* GameEngine::makeBag()
 {
   LinkedList* newTileBag = new LinkedList();
   std::default_random_engine engine(1);
-  map<int,char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN},{4, BLUE},{5, PURPLE}};
-  map<int,int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE},{4, STAR_6},{5, CLOVER}};
+  std::map<int,char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN},{4, BLUE},{5, PURPLE}};
+  std::map<int,int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE},{4, STAR_6},{5, CLOVER}};
   std::vector<Tile*> allTiles;
-  for(int x = 0; x < colourMap.size(); x++)
+  for(unsigned int x = 0; x < colourMap.size(); x++)
   {
-    for(int y = 0; y < shapeMap.size(); y++)
+    for(unsigned int y = 0; y < shapeMap.size(); y++)
     {
       for(int z = 0; z < NO_OF_EACH_TILE; z++)
       {
@@ -203,7 +205,7 @@ LinkedList GameEngine::makeBag()
   {
     std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE-1-i);
     index = uniform_dist(engine);
-    newTileBag.addBack(allTiles.at(value));
+    newTileBag->addBack(allTiles.at(index));
     allTiles.erase(allTiles.begin() + index);
   }
   return newTileBag;

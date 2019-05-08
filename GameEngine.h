@@ -24,7 +24,7 @@ public:
   void replaceTile();
 
   //NewGame Functions
-  LinkedList makeBag();
+  LinkedList* makeBag();
   void drawInitialTiles();
   void mainLoop();
   void alternateTurns();

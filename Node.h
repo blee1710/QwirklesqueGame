@@ -12,6 +12,9 @@ public:
 
    Tile*    tile;
    Node*    next;
+   Node*    prev;
+
+   std::string toString();
 };
 
 #endif // ASSIGN2_NODE_H

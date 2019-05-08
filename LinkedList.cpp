@@ -12,7 +12,7 @@ LinkedList::~LinkedList() {
 }
 
 void LinkedList::addFront(Tile* tile) {
-  Node* temp = new Node(tile, head);
+  Node* temp = new Node(tile, head, nullptr);
   if (head == nullptr) {
     head = temp;
     tail = temp;
@@ -23,7 +23,7 @@ void LinkedList::addFront(Tile* tile) {
 }
 
 void LinkedList::addBack(Tile* tile) {
-  Node* temp = new Node(tile, nullptr);
+  Node* temp = new Node(tile, nullptr, tail);
   if (head == nullptr){
     head = temp;
     tail = temp;
@@ -44,17 +44,22 @@ void LinkedList::deleteFront() {
 
 //code to delete back of list... faster if double linked list is implemented?
 void LinkedList::deleteBack() {
-  Node* curr = head;
-  Node* last;
+     Node* temp = tail;
+     tail = tail->prev;
+     delete temp;
+     size--;
+}
 
-  while(curr->next != nullptr){
-    last = curr;
-    curr = curr->next;
+
+//code to return nodes as a string
+std::string LinkedList::toString() {
+  std::string listString;
+  for(i = 0; i < size; i++) {
+    Node* curr = head;
+    listString += (curr->toString() + " ")
+    curr = curr->next
   }
-  tail = last;
-  last->next = nullptr;
-  delete curr;
-  size--;
+  return listString;
 }
 
 //Getter

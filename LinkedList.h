@@ -16,11 +16,14 @@ public:
    //Getters
    int getSize();
 
+   std::string toString();
+
 
 private:
    Node* head;
    Node* tail;
    int size;
+
 };
 
 #endif // ASSIGN2_LINKEDLIST_H

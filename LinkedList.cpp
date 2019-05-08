@@ -9,6 +9,7 @@ tail(nullptr)
 }
 
 LinkedList::~LinkedList() {
+  clear();
 }
 
 void LinkedList::addFront(Tile* tile) {
@@ -79,4 +80,13 @@ Node* LinkedList::getNode(Tile* tile) {
     curr = curr->next;
   }
   return foundNode;
+}
+
+void LinkedList::clear(){
+  while(this->head != nullptr){
+    Node* toDelete = this-> head;
+    head = toDelete->next;
+    delete toDelete;
+  }
+  tail = nullptr;
 }

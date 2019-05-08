@@ -12,7 +12,7 @@ public:
    void addBack(Tile* tile);
    void deleteFront();
    void deleteBack();
-
+   void clear();
    //Getters
    int getSize();
    std::string toString();

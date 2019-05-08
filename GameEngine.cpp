@@ -2,8 +2,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <random>
+#include <vector>
+#include <map>
 #define BOARD_SIZE 26
+#define NO_OF_EACH_TILE 2
+#define MAX_NO_OF_TILE 72
 
 GameEngine::GameEngine()
 {
@@ -175,4 +179,32 @@ void GameEngine::printBoard()
     }
     std::cout << "|" << std::endl;
   }
+}
+
+LinkedList GameEngine::makeBag()
+{
+  LinkedList* newTileBag = new LinkedList();
+  std::default_random_engine engine(1);
+  map<int,char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN},{4, BLUE},{5, PURPLE}};
+  map<int,int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE},{4, STAR_6},{5, CLOVER}};
+  std::vector<Tile*> allTiles;
+  for(int x = 0; x < colourMap.size(); x++)
+  {
+    for(int y = 0; y < shapeMap.size(); y++)
+    {
+      for(int z = 0; z < NO_OF_EACH_TILE; z++)
+      {
+        allTiles.push_back(new Tile(colourMap[x], shapeMap[y]));
+      }
+    }
+  }
+  int index = 0;
+  for(int i = 0 ; i < MAX_NO_OF_TILE ; i++)
+  {
+    std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE-1-i);
+    index = uniform_dist(engine);
+    newTileBag.addBack(allTiles.at(value));
+    allTiles.erase(allTiles.begin() + index);
+  }
+  return newTileBag;
 }

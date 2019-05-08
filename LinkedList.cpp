@@ -70,13 +70,13 @@ int LinkedList::getSize() {
 //returns node, used for replacing tiles?? will possibly need to adj
 // to remove from the list as well
 Node* LinkedList::getNode(Tile* tile) {
+  Node* foundNode = nullptr;
   Node* curr = head;
-  for(int i = 0; i < size; i++) {
-    if (curr->getTile() == tile) {
-      return curr;
-    } else {
-      curr = curr->next;
+  while(curr != nullptr && foundNode == nullptr){
+    if (curr->getTile() == tile){
+      foundNode = curr;
     }
+    curr = curr->next;
   }
-  return NULL;
+  return foundNode;
 }

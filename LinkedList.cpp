@@ -5,7 +5,7 @@ LinkedList::LinkedList() :
 head(nullptr),
 tail(nullptr)
 {
-   // TODO
+  size = 0;
 }
 
 LinkedList::~LinkedList() {
@@ -19,6 +19,7 @@ void LinkedList::addFront(Tile* tile) {
   } else {
     head = temp;
   }
+  size++;
 }
 
 void LinkedList::addBack(Tile* tile) {
@@ -31,12 +32,14 @@ void LinkedList::addBack(Tile* tile) {
     tail->next = temp;
     tail = temp;
   }
+  size++;
 }
 
 void LinkedList::deleteFront() {
   Node* temp = head;
   head = head->next;
   delete temp;
+  size--;
 }
 
 //code to delete back of list... faster if double linked list is implemented?
@@ -51,4 +54,10 @@ void LinkedList::deleteBack() {
   tail = last;
   last->next = nullptr;
   delete curr;
+  size--;
+}
+
+//Getter
+int LinkedList::getSize() {
+  return size;
 }

@@ -13,9 +13,14 @@ public:
    void deleteFront();
    void deleteBack();
 
+   //Getters
+   int getSize();
+
+
 private:
    Node* head;
    Node* tail;
+   int size;
 };
 
 #endif // ASSIGN2_LINKEDLIST_H

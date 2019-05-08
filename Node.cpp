@@ -12,10 +12,7 @@ std::string Node::toString(){
   return tile->toString();
 }
 
-<<<<<<< HEAD
-Tile* Node::getTile() {
-=======
+
 Tile* Node::getTile(){
->>>>>>> 13dd8c76aea86ff4832e1c5f4a604709d7c76ecc
   return tile;
 }

@@ -15,6 +15,7 @@ public:
    Node*    prev;
 
    std::string toString();
+   Tile* getTile();
 };
 
 #endif // ASSIGN2_NODE_H

@@ -50,7 +50,6 @@ void LinkedList::deleteBack() {
      size--;
 }
 
-
 //code to return nodes as a string
 std::string LinkedList::toString() {
   std::string listString;
@@ -62,7 +61,22 @@ std::string LinkedList::toString() {
   return listString;
 }
 
+
 //Getter
 int LinkedList::getSize() {
   return size;
+}
+
+//returns node, used for replacing tiles?? will possibly need to adj
+// to remove from the list as well
+Node* LinkedList::getNode(Tile* tile) {
+  Node* curr = head;
+  for(i = 0; i < size; i++){
+    if (curr->getTile() == tile){
+      return curr;
+    } else {
+      curr = curr->next;
+    }
+  }
+  return NULL;
 }

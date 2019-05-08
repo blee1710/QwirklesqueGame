@@ -18,3 +18,7 @@ prev(other.prev)
 std::string Node::Node toString(){
   return tile.toString();
 }
+
+Tile* getTile(){
+  return tile;
+}

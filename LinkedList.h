@@ -15,9 +15,8 @@ public:
 
    //Getters
    int getSize();
-
    std::string toString();
-
+   Node* getNode(Tile* tile);
 
 private:
    Node* head;

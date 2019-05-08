@@ -183,9 +183,9 @@ void GameEngine::printBoard()
   }
 }
 
-LinkedList* GameEngine::makeBag()
+void GameEngine::makeBag()
 {
-  LinkedList* newTileBag = new LinkedList();
+  tileBag = new LinkedList();
   std::default_random_engine engine(1);
   std::map<int,char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN},{4, BLUE},{5, PURPLE}};
   std::map<int,int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE},{4, STAR_6},{5, CLOVER}};
@@ -205,8 +205,7 @@ LinkedList* GameEngine::makeBag()
   {
     std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE-1-i);
     index = uniform_dist(engine);
-    newTileBag->addBack(allTiles.at(index));
+    tileBag->addBack(allTiles.at(index));
     allTiles.erase(allTiles.begin() + index);
   }
-  return newTileBag;
 }

@@ -24,7 +24,7 @@ public:
   void replaceTile();
 
   //NewGame Functions
-  LinkedList* makeBag();
+  void makeBag();
   void drawInitialTiles();
   void mainLoop();
   void alternateTurns();
@@ -36,7 +36,7 @@ public:
 
 
 private:
-  LinkedList tileBag;
+  LinkedList* tileBag;
   Player* currentPlayer;
   Player* playerArray[2];
   int numPlayers;

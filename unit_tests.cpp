@@ -13,12 +13,16 @@ void checkFile(std::string &filename);
 void loadInput(char** argv);
 int findMax(std::string yVal);
 
-int main(int argc, char** argv) {
-  GameEngine gameEngine = new GameEngine();
+// DELETE LATER
+void printHighScores();
+void saveHighScores();
+// END DELETE
 
+int main(int argc, char** argv) {
   try {
       checkArgs(argc, argv);
       loadInput(argv);
+      printHighScores();
   } catch(std::runtime_error &exception) {
       std::cout << "ERROR: " << exception.what() << std::endl;
   }
@@ -162,4 +166,76 @@ int findMax(std::string yVal) {
     }
   }
   return std::max(currMax, num);
+}
+
+// FUNCTION BELONGS IN GAMEENGINE. PLACED HERE RIGHT NOW TO AVOID
+// MERGE ERRORS WITH GITHUB
+void printHighScores()
+{
+  std::string filename = "highscore.txt";
+  std::ifstream in;
+  in.open(filename);
+
+  std::string line;
+  while(std::getline(in, line))
+  {
+    std::cout << line << std::endl;
+  }
+}
+
+void saveHighScores()
+{
+  // Loads players from highscore file to a vector
+  std::string filename = "highscore.txt";
+  std::ifstream in;
+  in.open(filename);
+
+  std::vector<Player*> players;
+  std::string line;
+  while(std::getline(in, line))
+  {
+    // String stream to break up playerName from playerScore
+    std::istringstream lineStream(line);
+
+    std::string playerName;
+    std::getline(lineStream, playerName, ',');
+
+    std::string playerScoreString;
+    std::getline(lineStream, playerScoreString, ',');
+    int playerScore = std::stoi(playerScoreString);
+
+    Player* playerPtr = new Player(playerName);
+    playerPtr->addPoints(playerScore);
+    // Vector has player in order from largest points to smallest points
+    players.push_back(playerPtr);
+  }
+  in.close();
+
+  // Compares the players currently in play with the players on the leader board
+  for (int i = 0; i < 2; i++)
+  {
+    int j = 0;
+    int insertAt = players.size();
+    bool endLoop = false;
+    while (j < players.size() && !endLoop)
+    {
+      if (players[j]->getScore() < currentPlayers[i]->getScore())
+      {
+        insertAt = j;
+        endLoop = true;
+      }
+      j++;
+    }
+    players.insert(players.begin() + insertAt, currentPlayers[i]);
+  }
+
+  // Prints  out the top 5 highscores, leaving off player whose scores are less
+  // than the top 5
+  std::ofstream out;
+  outFile.open(filename);
+  for (int i = 0; i < players.size() && i < 5; i++)
+  {
+    out << players[i]->getName() << "," << players[i]->getScore() << std::endl;
+  }
+  out.close();
 }

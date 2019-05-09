@@ -13,6 +13,7 @@ public:
    void deleteFront();
    void deleteBack();
    void clear();
+   void deleteAt(int pos);
    //Getters
    int getSize();
    std::string toString();

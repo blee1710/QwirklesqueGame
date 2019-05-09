@@ -63,6 +63,21 @@ std::string LinkedList::toString() {
 }
 
 
+void LinkedList::deleteAt(int pos){
+  if(pos > size){
+    return;
+  }
+
+  Node* curr = head;
+  for(int i = 0; i < pos; i++){
+    curr = curr->next;
+  }
+  Node* temp = curr;
+  curr->next->prev = temp->prev;
+  curr = curr->next;
+  delete temp;
+}
+
 //Getter
 int LinkedList::getSize() {
   return size;
@@ -81,6 +96,8 @@ Node* LinkedList::getNode(Tile* tile) {
   }
   return foundNode;
 }
+
+
 
 void LinkedList::clear(){
   while(this->head != nullptr){

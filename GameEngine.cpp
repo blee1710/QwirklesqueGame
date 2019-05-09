@@ -1,6 +1,4 @@
 #include "GameEngine.h"
-#include "TileCodes.h"
-#include "LinkedList.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -84,14 +82,29 @@ void GameEngine::addPlayer(std::string name)
   numPlayers++;
 }
 
-void GameEngine::placeTile(Tile tile, char letter, int y)
+void GameEngine::placeTile(std::string tile, std::string location)
 {
   //Check if tile exists in player's hand (using getter from Player)
-  //currentPlayer.getLinkedList() etc
+  for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+  {
+    if (currentPlayer->getHand().getTileAt(i)->toString2() == tile)
+    {
+      //Fix these 4 lines
+      Tile *tileObj = currentPlayer->getHand().getTileAt(i);
+      currentPlayer->getHandPtr()->deleteFront();
+      currentPlayer->drawTile(tileBag.getTileAt(0));
+      tileBag.deleteFront();
 
-  //Puts the tile in the corresponding position
-  int x = letterToNumber(letter);
-  board[x][y] = tile;
+      //Placing tile on board
+      std::string lstring = location.substr(0, 1);
+      char *lchar = &lstring[0u];
+      int letter = letterToNumber(*lchar);
+      int number = std::stoi(location.substr(1, 2));
+      board[letter][number] = tileObj;
+      //Early Termination
+      i = currentPlayer->getHand().getSize();
+    }
+  }
 }
 
 void GameEngine::replaceTile()
@@ -105,7 +118,7 @@ int GameEngine::letterToNumber(char letter)
   char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
   for (int i = 0; i < 26; i++)
   {
-    if (letter = alphabet[i])
+    if (letter == alphabet[i])
     {
       index = i;
       //Early termination
@@ -136,7 +149,9 @@ void GameEngine::drawInitialTiles()
   {
     for (int i = 0; i < 6; i++)
     {
-      p->drawTile();
+      Tile *tile = tileBag.getTileAt(0);
+      tileBag.deleteFront();
+      p->drawTile(tile);
     }
   }
 }
@@ -144,19 +159,34 @@ void GameEngine::drawInitialTiles()
 //The main loop between player's turns.
 void GameEngine::mainLoop()
 {
-  // while(tileBag.getHead() != null && currentPlayer->getHand().getHead() != null)
   currentPlayer = playerArray[0];
-
-  std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
-  for (int i = 0; i < numPlayers; i++)
+  clearBoardMemory();
+  while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
   {
-    std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+
+    std::string action;
+    std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
+    for (int i = 0; i < numPlayers; i++)
+    {
+      std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+    }
+    printBoard();
+    currentPlayer->printTiles();
+
+    //Eat the line if necessary
+    std::getline(std::cin, action);
+    if (action == "")
+    {
+      std::getline(std::cin, action);
+    }
+    playerAction(action);
+    alternateTurns();
   }
 }
 
 void GameEngine::alternateTurns()
 {
-  if (currentPlayer = playerArray[0])
+  if (currentPlayer == playerArray[0])
   {
     currentPlayer = playerArray[1];
   }
@@ -166,18 +196,38 @@ void GameEngine::alternateTurns()
   }
 }
 
+void GameEngine::clearBoardMemory()
+{
+  //Makes sure there isn't any memory in array already (remove later)
+  for (int k = 0; k < 26; k++)
+  {
+    for (int l = 0; l < 26; l++)
+    {
+      board[k][l] = 0;
+    }
+  }
+}
+
 void GameEngine::printBoard()
 {
   std::cout << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25" << std::endl;
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
   //Print all 26 rows
+
   for (int i = 0; i < 26; i++)
   {
     char letter = numberToLetter(i);
     std::cout << letter << " ";
     for (int j = 0; j < 26; j++)
     {
-      std::cout << "|" << board[i][j].toString();
+      if (board[i][j] != 0)
+      {
+        std::cout << "|" << board[i][j]->toString();
+      }
+      else
+      {
+        std::cout << "|  ";
+      }
     }
     std::cout << "|" << std::endl;
   }
@@ -185,27 +235,40 @@ void GameEngine::printBoard()
 
 void GameEngine::makeBag()
 {
-  tileBag = new LinkedList();
   std::default_random_engine engine(1);
-  std::map<int,char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN},{4, BLUE},{5, PURPLE}};
-  std::map<int,int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE},{4, STAR_6},{5, CLOVER}};
-  std::vector<Tile*> allTiles;
-  for(unsigned int x = 0; x < colourMap.size(); x++)
+  std::map<int, char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN}, {4, BLUE}, {5, PURPLE}};
+  std::map<int, int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE}, {4, STAR_6}, {5, CLOVER}};
+  std::vector<Tile *> allTiles;
+  for (unsigned int x = 0; x < colourMap.size(); x++)
   {
-    for(unsigned int y = 0; y < shapeMap.size(); y++)
+    for (unsigned int y = 0; y < shapeMap.size(); y++)
     {
-      for(int z = 0; z < NO_OF_EACH_TILE; z++)
+      for (unsigned int z = 0; z < NO_OF_EACH_TILE; z++)
       {
         allTiles.push_back(new Tile(colourMap[x], shapeMap[y]));
       }
     }
   }
+
   int index = 0;
-  for(int i = 0 ; i < MAX_NO_OF_TILE ; i++)
+  for (int i = 0; i < MAX_NO_OF_TILE; i++)
   {
-    std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE-1-i);
+    std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE - 1 - i);
     index = uniform_dist(engine);
-    tileBag->addBack(allTiles.at(index));
+    tileBag.addBack(allTiles.at(index));
     allTiles.erase(allTiles.begin() + index);
   }
+}
+
+void GameEngine::playerAction(std::string action)
+{
+  if (action.substr(0, 5) == "place" && action.substr(9, 2) == "at")
+  {
+    std::string tile = action.substr(6, 2);
+    std::string location = action.substr(12, 14);
+
+    placeTile(tile, location);
+  }
+
+  
 }

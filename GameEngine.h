@@ -7,6 +7,7 @@
 #include "LinkedList.h"
 #include "Player.h"
 #include "Tile.h"
+#include "TileCodes.h"
 
 class GameEngine
 {
@@ -19,8 +20,8 @@ public:
   void addTile(Tile tile);
 
   //Game Functions
-  void addPlayer(std::string);
-  void placeTile(Tile tile, char letter, int number);
+  void addPlayer(std::string name);
+  void placeTile(std::string tile, std::string location);
   void replaceTile();
 
   //NewGame Functions
@@ -33,14 +34,16 @@ public:
   //Other Functions
   int letterToNumber(char letter);
   char numberToLetter(int number);
+  void clearBoardMemory();
+  void playerAction(std::string action);
 
 
 private:
-  LinkedList* tileBag;
+  LinkedList tileBag;
   Player* currentPlayer;
   Player* playerArray[2];
   int numPlayers;
-  Tile board[][26];
+  Tile* board[26][26];
 };
 
 #endif // ASSIGN2_GAME_ENGINE_H

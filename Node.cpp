@@ -12,7 +12,6 @@ std::string Node::toString(){
   return tile->toString();
 }
 
-
 Tile* Node::getTile(){
   return tile;
 }

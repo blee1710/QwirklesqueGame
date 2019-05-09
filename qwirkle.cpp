@@ -102,15 +102,11 @@ void newGame()
    std::cout << "Alright, " << player1 << " and " << player2 << ", Let's Play!" << std::endl;
 
    //Add random tiles to tileBag with Danny's random tile generation method.
-
+   ge->makeBag();
    //Draw 6 tiles into each player's hands
-   
-
+   ge->drawInitialTiles();
    //Start with player 1 then keep Alternating between player's turns until game ends.
-
-
-
-
+   ge->mainLoop();
 }
 
 void loadGame()

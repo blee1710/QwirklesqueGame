@@ -16,6 +16,7 @@ public:
    void deleteAt(int pos);
    //Getters
    int getSize();
+   Tile* getTileAt(int index);
    std::string toString();
    Node* getNode(Tile* tile);
 

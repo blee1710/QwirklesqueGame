@@ -9,7 +9,7 @@ tail(nullptr)
 }
 
 LinkedList::~LinkedList() {
-  clear();
+  //clear();
 }
 
 void LinkedList::addFront(Tile* tile) {
@@ -78,7 +78,7 @@ void LinkedList::deleteAt(int pos){
   delete temp;
 }
 
-//Getter
+//Getters
 int LinkedList::getSize() {
   return size;
 }
@@ -97,7 +97,19 @@ Node* LinkedList::getNode(Tile* tile) {
   return foundNode;
 }
 
-
+Tile *LinkedList::getTileAt(int index)
+{
+  int i = 0;
+  Node *curr = head;
+  Tile *tile;
+  while (i < index)
+  {
+    curr = curr->next;
+    i++;
+  }
+  tile = curr->getTile();
+  return tile;
+}
 
 void LinkedList::clear(){
   while(this->head != nullptr){

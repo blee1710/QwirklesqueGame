@@ -36,3 +36,10 @@ std::string Tile::toString2()
     tile += std::to_string(shape);
     return tile;
 }
+
+// Test Code for alt imp colour
+//
+// std::string Tile::toString()
+// {
+//     return colour + shape + "\033[0m";
+// }

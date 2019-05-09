@@ -28,3 +28,11 @@ std::string Tile::toString()
 
     return colourCode + colour + shapeCode + "\033[0m";
 }
+
+std::string Tile::toString2()
+{
+    std::string tile = "";
+    tile += colour;
+    tile += std::to_string(shape);
+    return tile;
+}

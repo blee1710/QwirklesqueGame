@@ -4,17 +4,20 @@
 #include <string>
 
 #include "LinkedList.h"
+#include "Tile.h"
 
 class Player
 {
   public:
     Player(std::string name);
     void addPoints(int points);
-    void drawTile();
+    void drawTile(Tile* tile);
+    void printTiles();
     //Getters and Setters
     LinkedList getHand();
     std::string getName();
     int getScore();
+    LinkedList* getHandPtr();
 
   private:
     std::string name;

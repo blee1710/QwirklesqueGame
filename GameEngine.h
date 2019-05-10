@@ -36,6 +36,7 @@ public:
   char numberToLetter(int number);
   void clearBoardMemory();
   void playerAction(std::string action);
+  void help();
 
 
 private:

@@ -270,5 +270,19 @@ void GameEngine::playerAction(std::string action)
     placeTile(tile, location);
   }
 
-  
+
+}
+
+void GameEngine::help()
+{
+  cout << "Qwickle Game version 1.0- release Help Guide\n"
+       << "List of functions the user can call on the Qwirkle game\n\n"
+       <<	"help\n"
+       << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
+       << "place <tile> at <grid location>\n"
+       << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
+       << "replace <tile>\n"
+       << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
+       << "save <filename>\n"
+       << "Saves the current state of the game in an output file with the name the user specified.\n";
 }

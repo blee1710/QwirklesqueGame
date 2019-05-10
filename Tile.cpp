@@ -7,6 +7,10 @@ Tile::Tile(Colour colour, Shape shape)
     this->shape = shape;
 }
 
+Tile::Tile(Tile& otherTile): colour(otherTile.colour), shape(otherTile.shape)
+{
+}
+
 std::string Tile::toString()
 {
     // Setting text colour using ANSI colour codes (default is black)

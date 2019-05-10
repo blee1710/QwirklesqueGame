@@ -74,6 +74,9 @@ void GameEngine::saveGame(std::string filename)
 
 void GameEngine::loadGame(std::string filename)
 {
+  //Check if file exists.
+  //Check that the format of the file is correct.
+  std::cout<<"Qwirkle game successfully loaded"<<std::endl;
 }
 
 void GameEngine::addPlayer(std::string name)

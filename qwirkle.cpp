@@ -112,14 +112,10 @@ void newGame()
 void loadGame()
 {
    std::cout<<"Enter the filename to load a game"<<std::endl;
-
-   //Check if file exists.
-   //CHeck that the format of the file is correct.
    std::string filename;
    std::cin >> filename;
    ge->loadGame(filename);
 
-   //std::cout<<"Qwirkle game successfully loaded"<<std::endl;
 }
 
 void showStudentInfo()
@@ -140,6 +136,7 @@ void showStudentInfo()
    std::cout<<"Name: Danny Le"<<std::endl;
    std::cout<<"Student ID: s3722067"<<std::endl;
    std::cout<<"Email: s3722067@student.rmit.edu.au"<<std::endl;
+   std::cout<<"------------------------------"<<std::endl;
    menu();
 }
 

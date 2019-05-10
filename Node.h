@@ -15,6 +15,7 @@ public:
    Node*    prev;
 
    std::string toString();
+   std::string toString2();
    Tile* getTile();
 };
 

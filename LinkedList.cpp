@@ -54,9 +54,19 @@ void LinkedList::deleteBack() {
 //code to return nodes as a string
 std::string LinkedList::toString() {
   std::string listString;
+  Node* curr = head;
   for(int i = 0; i < size; i++) {
-    Node* curr = head;
-    listString += (curr->toString() + " ");
+    listString += (curr->getTile()->toString() + " ");
+    curr = curr->next;
+  }
+  return listString;
+}
+
+std::string LinkedList::toString2() {
+  std::string listString;
+  Node* curr = head;
+  for(int i = 0; i < size; i++) {
+    listString += (curr->getTile()->toString2() + " ");
     curr = curr->next;
   }
   return listString;

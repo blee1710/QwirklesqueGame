@@ -28,16 +28,16 @@ void GameEngine::saveGame(std::string filename)
   outFile.open(filename);
 
   // Writing out player data
-  outFile << /*player1->getName() << */ std::endl;
-  outFile << /*player1->getPoints() << */ std::endl;
+  outFile << playerArray[0]->getName() << std::endl;
+  outFile << playerArray[0]->getScore() << std::endl;
   // Would probabbly want a toString method for LinkedList so that it prints out
   // the list in the format needed. Would be way more efficent than doing it in
   // the GameEngine ('for' loop that would call some sort of getAt(i) method).
-  outFile << /*player1->getHand.toString() << */ std::endl;
+  outFile << playerArray[0]->getHand().toString2() << std::endl;
 
-  outFile << /*player2->getName() << */ std::endl;
-  outFile << /*player2->getPoints() << */ std::endl;
-  outFile << /*player2->getHand.toString() << */ std::endl;
+  outFile << playerArray[1]->getName() << std::endl;
+  outFile << playerArray[1]->getScore() << std::endl;
+  outFile << playerArray[1]->getHand().toString2() << std::endl;
 
   // Writing out board to file
   outFile << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20"
@@ -65,11 +65,11 @@ void GameEngine::saveGame(std::string filename)
     outFile << std::endl;
   }
 
-  // Writing out tile bag to file
-  outFile << /*tileBag->toString(); << */ std::endl;
+    // Writing out tile bag to file
+    outFile << tileBag.toString2() << std::endl;
 
-  // Writing out current player to file
-  outFile << /*currentPlayer->getName() << */ std::endl;
+    // Writing out current player to file
+    outFile << currentPlayer->getName() << std::endl;
 
   outFile.close();
 }
@@ -182,7 +182,6 @@ void GameEngine::mainLoop()
     printBoard();
     currentPlayer->printTiles();
     takeAction();
-    alternateTurns();
   }
 }
 
@@ -283,6 +282,17 @@ void GameEngine::playerAction(std::string action)
     std::string location = action.substr(12, 14);
 
     placeTile(tile, location);
+    alternateTurns();
+  }
+
+
+  else if (action.substr(0,4) == "help") {
+    help();
+  }
+
+  else if (action.substr(0,4) == "save"){
+    std::string filename = action.substr(5);
+    saveGame(filename);
   }
   else
   {
@@ -296,10 +306,10 @@ void GameEngine::playerAction(std::string action)
 //Checks if there are tiles surrounding it
 bool GameEngine::checkSurround(int letter, int number)
 {
-  bool left;
-  bool up;
-  bool right;
-  bool down;
+  bool left = false;
+  bool up = false;
+  bool right = false;
+  bool down = false;
   bool retVal;
   //Check left
   if (number - 1 >= 0)
@@ -496,4 +506,18 @@ void GameEngine::saveHighScores()
   {
     delete players[i];
   }
+}
+
+void GameEngine::help()
+{
+  std::cout << "Qwirkle Game version 1.0- release Help Guide\n"
+       << "List of functions the user can call on the Qwirkle game\n\n"
+       <<	"help\n"
+       << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
+       << "place <tile> at <grid location>\n"
+       << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
+       << "replace <tile>\n"
+       << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
+       << "save <filename>\n"
+       << "Saves the current state of the game in an output file with the name the user specified.\n";
 }

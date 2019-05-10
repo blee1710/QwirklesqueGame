@@ -40,6 +40,8 @@ public:
   int countTiles(int letter, int number, int direction);
   void takeAction();
 
+  void help();
+
 
 private:
   LinkedList tileBag;

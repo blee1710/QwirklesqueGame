@@ -275,7 +275,7 @@ void GameEngine::playerAction(std::string action)
 
 void GameEngine::help()
 {
-  cout << "Qwickle Game version 1.0- release Help Guide\n"
+  std::cout << "Qwickle Game version 1.0- release Help Guide\n"
        << "List of functions the user can call on the Qwirkle game\n\n"
        <<	"help\n"
        << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"

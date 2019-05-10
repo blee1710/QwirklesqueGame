@@ -115,8 +115,11 @@ void loadGame()
 
    //Check if file exists.
    //CHeck that the format of the file is correct.
+   std::string filename;
+   std::cin >> filename;
+   ge->loadGame(filename);
 
-   std::cout<<"Qwirkle game successfully loaded"<<std::endl;
+   //std::cout<<"Qwirkle game successfully loaded"<<std::endl;
 }
 
 void showStudentInfo()
@@ -125,6 +128,19 @@ void showStudentInfo()
    std::cout<<"Name: Wesley Lee"<<std::endl;
    std::cout<<"Student ID: s3719843"<<std::endl;
    std::cout<<"Email: s3719843@student.rmit.edu.au"<<std::endl;
+   std::cout<<"------------------------------"<<std::endl;
+   std::cout<<"Name: Matthew Samuel"<<std::endl;
+   std::cout<<"Student ID: s3717393"<<std::endl;
+   std::cout<<"Email: s3717393@student.rmit.edu.au"<<std::endl;
+   std::cout<<"------------------------------"<<std::endl;
+   std::cout<<"Name: Brandon Lee"<<std::endl;
+   std::cout<<"Student ID: s3707616"<<std::endl;
+   std::cout<<"Email: s3707616@student.rmit.edu.au"<<std::endl;
+   std::cout<<"------------------------------"<<std::endl;
+   std::cout<<"Name: Danny Le"<<std::endl;
+   std::cout<<"Student ID: s3722067"<<std::endl;
+   std::cout<<"Email: s3722067@student.rmit.edu.au"<<std::endl;
+   menu();
 }
 
 //

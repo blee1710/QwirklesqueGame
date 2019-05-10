@@ -21,7 +21,7 @@ public:
 
   //Game Functions
   void addPlayer(std::string name);
-  void placeTile(std::string tile, std::string location);
+  void placeTile(std::string tile, std::string location, int index);
   void replaceTile();
 
   //NewGame Functions
@@ -35,10 +35,10 @@ public:
   int letterToNumber(char letter);
   char numberToLetter(int number);
   void clearBoardMemory();
-  void playerAction(std::string action);
+  void executeCommand(std::string action);
   bool checkSurround(int letter, int number);
   int countTiles(int letter, int number, int direction);
-  void takeAction();
+  void readInCommand();
 
   void help();
 

@@ -73,19 +73,32 @@ std::string LinkedList::toString2() {
 }
 
 
-void LinkedList::deleteAt(int pos){
-  if(pos > size){
+void LinkedList::deleteAt(int pos)
+{
+  if (pos > size)
+  {
     return;
   }
-
-  Node* curr = head;
-  for(int i = 0; i < pos; i++){
-    curr = curr->next;
+  if (pos == 0)
+  {
+    deleteFront();
   }
-  Node* temp = curr;
-  curr->next->prev = temp->prev;
-  curr = curr->next;
-  delete temp;
+  else if (pos == size - 1)
+  {
+    deleteBack();
+  }
+  else
+  {
+    Node *curr = head;
+    for (int i = 0; i < pos; i++)
+    {
+      curr = curr->next;
+    }
+    curr->prev->next = curr->next;
+    curr->next->prev = curr->prev;
+    delete curr;
+    size--;
+  }
 }
 
 //Getters

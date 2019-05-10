@@ -19,7 +19,6 @@ void Player::addPoints(int points)
 //Adds a tile to their hand
 void Player::drawTile(Tile *tile)
 {
-    std::cout<<"Drawing tile"<<tile->toString()<<std::endl;
     hand.addBack(tile);
 }
 
@@ -30,11 +29,11 @@ void Player::printTiles()
     {
         if (i < 5)
         {
-            std::cout << hand.getTileAt(i)->toString() << ", ";
+            std::cout << hand.getTileAt(i)->toString2() << ", ";
         }
         else
         {
-            std::cout << hand.getTileAt(i)->toString()<<std::endl<<std::endl;
+            std::cout << hand.getTileAt(i)->toString2()<<std::endl<<std::endl;
         }
         
     }

@@ -66,11 +66,11 @@ void GameEngine::saveGame(std::string filename)
     outFile << std::endl;
   }
 
-    // Writing out tile bag to file
-    outFile << tileBag.toString2() << std::endl;
+  // Writing out tile bag to file
+  outFile << tileBag.toString2() << std::endl;
 
-    // Writing out current player to file
-    outFile << currentPlayer->getName() << std::endl;
+  // Writing out current player to file
+  outFile << currentPlayer->getName() << std::endl;
 
   outFile.close();
 }
@@ -85,48 +85,37 @@ void GameEngine::addPlayer(std::string name)
   numPlayers++;
 }
 
-void GameEngine::placeTile(std::string tile, std::string location)
+void GameEngine::placeTile(std::string tile, std::string location, int index)
 {
-  //Check if tile exists in player's hand (using getter from Player)
-  for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+  //String manipulation to access letter and number as ints
+  std::string lstring = location.substr(0, 1);
+  char *lchar = &lstring[0u];
+  int letter = letterToNumber(*lchar);
+  int number = std::stoi(location.substr(1, 2));
+
+  Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
+  if (turn == 0)
   {
-    Tile *tileObj = currentPlayer->getHand().getTileAt(i);
-    if (tileObj->toString2() == tile)
+    currentPlayer->getHandPtr()->deleteAt(index);
+    currentPlayer->drawTile(tileBag.getTileAt(0));
+    tileBag.deleteFront();
+    board[letter][number] = tileObj;
+  }
+  else
+  {
+    if (checkSurround(letter, number))
     {
-      //String manipulation to access letter and number as ints
-      std::string lstring = location.substr(0, 1);
-      char *lchar = &lstring[0u];
-      int letter = letterToNumber(*lchar);
-      int number = std::stoi(location.substr(1, 2));
-
-      if (turn == 0){
-        currentPlayer->getHandPtr()->deleteAt(i);
-        currentPlayer->drawTile(tileBag.getTileAt(0));
-        tileBag.deleteFront();
-
-        board[letter][number] = tileObj;
-        //Early Termination
-        i = currentPlayer->getHand().getSize();
-      }  else {
-      if (checkSurround(letter, number))
-      {
-          currentPlayer->getHandPtr()->deleteAt(i);
-          currentPlayer->drawTile(tileBag.getTileAt(0));
-          tileBag.deleteFront();
-
-          board[letter][number] = tileObj;
-          //Early Termination
-          i = currentPlayer->getHand().getSize();
-        }
-        else
-        {
-          std::cout << "You can't place a tile there" << std::endl;
-          takeAction();
-        }
-
-      }
+      currentPlayer->getHandPtr()->deleteAt(index);
+      currentPlayer->drawTile(tileBag.getTileAt(0));
+      tileBag.deleteFront();
+      board[letter][number] = tileObj;
     }
-}
+    else
+    {
+      std::cout << "You can't place a tile there" << std::endl;
+      readInCommand();
+    }
+  }
 }
 
 void GameEngine::replaceTile()
@@ -181,7 +170,7 @@ void GameEngine::drawInitialTiles()
 //The main loop between player's turns.
 void GameEngine::mainLoop()
 {
-  currentPlayer = playerArray[0];
+  currentPlayer = &*playerArray[0];
   clearBoardMemory();
   while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
   {
@@ -193,11 +182,11 @@ void GameEngine::mainLoop()
     }
     printBoard();
     currentPlayer->printTiles();
-    takeAction();
+    readInCommand();
   }
 }
 
-void GameEngine::takeAction()
+void GameEngine::readInCommand()
 {
   std::string action;
   std::cout << ">";
@@ -207,7 +196,7 @@ void GameEngine::takeAction()
   {
     std::getline(std::cin, action);
   }
-  playerAction(action);
+  executeCommand(action);
 }
 
 void GameEngine::alternateTurns()
@@ -288,23 +277,45 @@ void GameEngine::makeBag()
   }
 }
 
-void GameEngine::playerAction(std::string action)
+void GameEngine::executeCommand(std::string action)
 {
+  bool valid = false;
+  int index = 0;
   if (action.substr(0, 5) == "place" && action.substr(9, 2) == "at")
   {
     std::string tile = action.substr(6, 2);
-    std::string location = action.substr(12, 14);
 
-    placeTile(tile, location);
-    alternateTurns();
+    //If tile is in hand, call place Tile
+    for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+    {
+      Tile *tileObj = currentPlayer->getHand().getTileAt(i);
+      if (tileObj->toString2() == tile)
+      {
+        valid = true;
+        index = i;
+        //Early Termination
+        i = currentPlayer->getHand().getSize();
+      }
+    }
+    if (valid)
+    {
+      std::string location = action.substr(12, 14);
+
+      placeTile(tile, location, index);
+      alternateTurns();
+    }
+    else
+    {
+      std::cout << "You don't have that tile" << std::endl;
+      readInCommand();
+    }
   }
-
-
-  else if (action.substr(0,4) == "help") {
+  else if (action.substr(0, 4) == "help")
+  {
     help();
   }
-
-  else if (action.substr(0,4) == "save"){
+  else if (action.substr(0, 4) == "save")
+  {
     std::string filename = action.substr(5);
     saveGame(filename);
   }
@@ -312,7 +323,7 @@ void GameEngine::playerAction(std::string action)
   {
     std::cout << "Unrecognised command" << std::endl;
     std::getline(std::cin, action);
-    playerAction(action);
+    executeCommand(action);
   }
 }
 
@@ -369,7 +380,7 @@ bool GameEngine::checkSurround(int letter, int number)
       }
     }
   }
-  if (right && left && up && down)
+  if (right || left || up || down)
   {
     retVal = true;
   }
@@ -443,17 +454,21 @@ int GameEngine::countTiles(int letter, int number, int direction)
 }
 
 // HIGHSCORE FUNCTIONALITY
-void GameEngine::printHighScores() {
+void GameEngine::printHighScores()
+{
   std::string filename = "highscore.txt";
   std::ifstream in;
   in.open(filename);
 
-  if (in.fail()) {
+  if (in.fail())
+  {
     std::cout << "No highscores yet" << std::endl;
   }
-  else {
+  else
+  {
     std::string line;
-    while(std::getline(in, line)) {
+    while (std::getline(in, line))
+    {
       std::cout << line << std::endl;
     }
   }
@@ -466,9 +481,9 @@ void GameEngine::saveHighScores()
   std::ifstream in;
   in.open(filename);
 
-  std::vector<Player*> players;
+  std::vector<Player *> players;
   std::string line;
-  while(std::getline(in, line))
+  while (std::getline(in, line))
   {
     // String stream to break up playerName from playerScore
     std::istringstream lineStream(line);
@@ -480,7 +495,7 @@ void GameEngine::saveHighScores()
     std::getline(lineStream, playerScoreString, ',');
     int playerScore = std::stoi(playerScoreString);
 
-    Player* playerPtr = new Player(playerName);
+    Player *playerPtr = new Player(playerName);
     playerPtr->addPoints(playerScore);
     // Vector has player in order from largest points to smallest points
     players.push_back(playerPtr);
@@ -490,7 +505,7 @@ void GameEngine::saveHighScores()
   // Compares the players currently in play with the players on the leader board
   for (int i = 0; i < 2; i++)
   {
-    int j = 0;
+    unsigned int j = 0;
     int insertAt = players.size();
     bool endLoop = false;
     while (j < players.size() && !endLoop)
@@ -509,14 +524,14 @@ void GameEngine::saveHighScores()
   // than the top 5
   std::ofstream out;
   out.open(filename);
-  for (int i = 0; i < players.size() && i < 5; i++)
+  for (unsigned int i = 0; i < players.size() && i < 5; i++)
   {
     out << players[i]->getName() << "," << players[i]->getScore() << std::endl;
   }
   out.close();
 
   // Deallocating memory
-  for (int i = 0; i < players.size(); i++)
+  for (unsigned int i = 0; i < players.size(); i++)
   {
     delete players[i];
   }
@@ -525,13 +540,13 @@ void GameEngine::saveHighScores()
 void GameEngine::help()
 {
   std::cout << "Qwirkle Game version 1.0- release Help Guide\n"
-       << "List of functions the user can call on the Qwirkle game\n\n"
-       <<	"help\n"
-       << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
-       << "place <tile> at <grid location>\n"
-       << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
-       << "replace <tile>\n"
-       << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
-       << "save <filename>\n"
-       << "Saves the current state of the game in an output file with the name the user specified.\n";
+            << "List of functions the user can call on the Qwirkle game\n\n"
+            << "help\n"
+            << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
+            << "place <tile> at <grid location>\n"
+            << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
+            << "replace <tile>\n"
+            << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
+            << "save <filename>\n"
+            << "Saves the current state of the game in an output file with the name the user specified.\n";
 }

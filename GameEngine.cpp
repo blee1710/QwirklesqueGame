@@ -15,6 +15,7 @@ GameEngine::GameEngine()
 {
   std::cout << "ENGINE CREATED" << std::endl;
   numPlayers = 0;
+  turn = 0;
 }
 
 GameEngine::~GameEngine()
@@ -98,8 +99,7 @@ void GameEngine::placeTile(std::string tile, std::string location)
       int letter = letterToNumber(*lchar);
       int number = std::stoi(location.substr(1, 2));
 
-      if (checkSurround(letter, number))
-      {
+      if (turn == 0){
         currentPlayer->getHandPtr()->deleteAt(i);
         currentPlayer->drawTile(tileBag.getTileAt(0));
         tileBag.deleteFront();
@@ -107,14 +107,26 @@ void GameEngine::placeTile(std::string tile, std::string location)
         board[letter][number] = tileObj;
         //Early Termination
         i = currentPlayer->getHand().getSize();
-      }
-      else
+      }  else {
+      if (checkSurround(letter, number))
       {
-        std::cout << "You can't place a tile there" << std::endl;
-        takeAction();
+          currentPlayer->getHandPtr()->deleteAt(i);
+          currentPlayer->drawTile(tileBag.getTileAt(0));
+          tileBag.deleteFront();
+
+          board[letter][number] = tileObj;
+          //Early Termination
+          i = currentPlayer->getHand().getSize();
+        }
+        else
+        {
+          std::cout << "You can't place a tile there" << std::endl;
+          takeAction();
+        }
+
       }
     }
-  }
+}
 }
 
 void GameEngine::replaceTile()
@@ -203,10 +215,12 @@ void GameEngine::alternateTurns()
   if (currentPlayer == playerArray[0])
   {
     currentPlayer = playerArray[1];
+    turn++;
   }
   else
   {
     currentPlayer = playerArray[0];
+    turn++;
   }
 }
 

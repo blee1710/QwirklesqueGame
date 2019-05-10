@@ -48,6 +48,7 @@ private:
   Player* currentPlayer;
   Player* playerArray[2];
   int numPlayers;
+  int turn;
   Tile* board[26][26];
 
   void saveHighScores();

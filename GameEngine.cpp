@@ -548,5 +548,8 @@ void GameEngine::help()
             << "replace <tile>\n"
             << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
             << "save <filename>\n"
-            << "Saves the current state of the game in an output file with the name the user specified.\n";
+            << "Saves the current state of the game in an output file with the name the user specified.\n\n"
+            << "Tile Syntax of Tile is Colours+Shapes (Tile codes defined below)\n"
+            << "RED 'R', ORANGE 'O', YELLOW 'Y', GREEN  'G', BLUE   'B', PURPLE 'P'\n"
+            << "CIRCLE  1, STAR_4  2, DIAMOND  3, SQUARE  4, STAR_6  5, CLOVER  6\n";
 }

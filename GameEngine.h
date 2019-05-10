@@ -47,6 +47,9 @@ private:
   Player* playerArray[2];
   int numPlayers;
   Tile* board[26][26];
+
+  void saveHighScores();
+  void printHighScores();
 };
 
 #endif // ASSIGN2_GAME_ENGINE_H

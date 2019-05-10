@@ -5,6 +5,8 @@
 #include <random>
 #include <vector>
 #include <map>
+#include <sstream>
+
 #define BOARD_SIZE 26
 #define NO_OF_EACH_TILE 2
 #define MAX_NO_OF_TILE 72
@@ -414,4 +416,84 @@ int GameEngine::countTiles(int letter, int number, int direction)
     }
   }
   return numTiles;
+}
+
+// HIGHSCORE FUNCTIONALITY
+void GameEngine::printHighScores() {
+  std::string filename = "highscore.txt";
+  std::ifstream in;
+  in.open(filename);
+
+  if (in.fail()) {
+    std::cout << "No highscores yet" << std::endl;
+  }
+  else {
+    std::string line;
+    while(std::getline(in, line)) {
+      std::cout << line << std::endl;
+    }
+  }
+}
+
+void GameEngine::saveHighScores()
+{
+  // Loads players from highscore file to a vector
+  std::string filename = "highscore.txt";
+  std::ifstream in;
+  in.open(filename);
+
+  std::vector<Player*> players;
+  std::string line;
+  while(std::getline(in, line))
+  {
+    // String stream to break up playerName from playerScore
+    std::istringstream lineStream(line);
+
+    std::string playerName;
+    std::getline(lineStream, playerName, ',');
+
+    std::string playerScoreString;
+    std::getline(lineStream, playerScoreString, ',');
+    int playerScore = std::stoi(playerScoreString);
+
+    Player* playerPtr = new Player(playerName);
+    playerPtr->addPoints(playerScore);
+    // Vector has player in order from largest points to smallest points
+    players.push_back(playerPtr);
+  }
+  in.close();
+
+  // Compares the players currently in play with the players on the leader board
+  for (int i = 0; i < 2; i++)
+  {
+    int j = 0;
+    int insertAt = players.size();
+    bool endLoop = false;
+    while (j < players.size() && !endLoop)
+    {
+      if (players[j]->getScore() < playerArray[i]->getScore())
+      {
+        insertAt = j;
+        endLoop = true;
+      }
+      j++;
+    }
+    players.insert(players.begin() + insertAt, playerArray[i]);
+  }
+
+  // Prints  out the top 5 highscores, leaving off player whose scores are less
+  // than the top 5
+  std::ofstream out;
+  out.open(filename);
+  for (int i = 0; i < players.size() && i < 5; i++)
+  {
+    out << players[i]->getName() << "," << players[i]->getScore() << std::endl;
+  }
+  out.close();
+
+  // Deallocating memory
+  for (int i = 0; i < players.size(); i++)
+  {
+    delete players[i];
+  }
 }

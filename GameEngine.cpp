@@ -181,9 +181,12 @@ void GameEngine::mainLoop()
     if (action == "")
     {
       std::getline(std::cin, action);
+    } else if (action.substr(0, 5) == "place"){
+      playerAction(action);
+      alternateTurns();
+    } else {
+      playerAction(action);
     }
-    playerAction(action);
-    alternateTurns();
   }
 }
 
@@ -273,8 +276,13 @@ void GameEngine::playerAction(std::string action)
     placeTile(tile, location);
   }
 
-  if (action == "help") {
+  if (action.substr(0,4) == "help") {
     help();
+  }
+
+  if (action.substr(0,4) == "save"){
+    std::string filename = action.substr(5);
+    saveGame(filename);
   }
 
 

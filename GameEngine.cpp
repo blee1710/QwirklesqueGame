@@ -74,9 +74,6 @@ void GameEngine::saveGame(std::string filename)
 
 void GameEngine::loadGame(std::string filename)
 {
-  //Check if file exists.
-  //Check that the format of the file is correct.
-  std::cout<<"Qwirkle game successfully loaded"<<std::endl;
 }
 
 void GameEngine::addPlayer(std::string name)
@@ -90,22 +87,30 @@ void GameEngine::placeTile(std::string tile, std::string location)
   //Check if tile exists in player's hand (using getter from Player)
   for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
   {
-    if (currentPlayer->getHand().getTileAt(i)->toString2() == tile)
+    Tile *tileObj = currentPlayer->getHand().getTileAt(i);
+    if (tileObj->toString2() == tile)
     {
-      //Fix these 4 lines
-      Tile *tileObj = currentPlayer->getHand().getTileAt(i);
-      currentPlayer->getHandPtr()->deleteFront();
-      currentPlayer->drawTile(tileBag.getTileAt(0));
-      tileBag.deleteFront();
-
-      //Placing tile on board
+      //String manipulation to access letter and number as ints
       std::string lstring = location.substr(0, 1);
       char *lchar = &lstring[0u];
       int letter = letterToNumber(*lchar);
       int number = std::stoi(location.substr(1, 2));
-      board[letter][number] = tileObj;
-      //Early Termination
-      i = currentPlayer->getHand().getSize();
+
+      if (checkSurround(letter, number))
+      {
+        currentPlayer->getHandPtr()->deleteAt(i);
+        currentPlayer->drawTile(tileBag.getTileAt(0));
+        tileBag.deleteFront();
+
+        board[letter][number] = tileObj;
+        //Early Termination
+        i = currentPlayer->getHand().getSize();
+      }
+      else
+      {
+        std::cout << "You can't place a tile there" << std::endl;
+        takeAction();
+      }
     }
   }
 }
@@ -167,7 +172,6 @@ void GameEngine::mainLoop()
   while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
   {
 
-    std::string action;
     std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
     for (int i = 0; i < numPlayers; i++)
     {
@@ -175,19 +179,22 @@ void GameEngine::mainLoop()
     }
     printBoard();
     currentPlayer->printTiles();
-
-    //Eat the line if necessary
-    std::getline(std::cin, action);
-    if (action == "")
-    {
-      std::getline(std::cin, action);
-    } else if (action.substr(0, 5) == "place"){
-      playerAction(action);
-      alternateTurns();
-    } else {
-      playerAction(action);
-    }
+    takeAction();
+    alternateTurns();
   }
+}
+
+void GameEngine::takeAction()
+{
+  std::string action;
+  std::cout << ">";
+  //Eat the line if necessary
+  std::getline(std::cin, action);
+  if (action == "")
+  {
+    std::getline(std::cin, action);
+  }
+  playerAction(action);
 }
 
 void GameEngine::alternateTurns()
@@ -228,7 +235,7 @@ void GameEngine::printBoard()
     {
       if (board[i][j] != 0)
       {
-        std::cout << "|" << board[i][j]->toString();
+        std::cout << "|" << board[i][j]->toString2();
       }
       else
       {
@@ -275,29 +282,136 @@ void GameEngine::playerAction(std::string action)
 
     placeTile(tile, location);
   }
-
-  if (action.substr(0,4) == "help") {
-    help();
+  else
+  {
+    std::cout << "Unrecognised command" << std::endl;
+    std::getline(std::cin, action);
+    playerAction(action);
   }
-
-  if (action.substr(0,4) == "save"){
-    std::string filename = action.substr(5);
-    saveGame(filename);
-  }
-
-
 }
 
-void GameEngine::help()
+//Passes in the coordinate of the tile being placed
+//Checks if there are tiles surrounding it
+bool GameEngine::checkSurround(int letter, int number)
 {
-  std::cout << "Qwirkle Game version 1.0- release Help Guide\n"
-       << "List of functions the user can call on the Qwirkle game\n\n"
-       <<	"help\n"
-       << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
-       << "place <tile> at <grid location>\n"
-       << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
-       << "replace <tile>\n"
-       << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
-       << "save <filename>\n"
-       << "Saves the current state of the game in an output file with the name the user specified.\n";
+  bool left;
+  bool up;
+  bool right;
+  bool down;
+  bool retVal;
+  //Check left
+  if (number - 1 >= 0)
+  {
+    if (board[letter][number - 1] != 0)
+    {
+      if (countTiles(letter, number - 1, 0) < 6)
+      {
+        left = true;
+      }
+    }
+  }
+  //Check right
+  if (number + 1 <= 25)
+  {
+    if (board[letter][number + 1] != 0)
+    {
+      if (countTiles(letter, number + 1, 2) < 6)
+      {
+        right = true;
+      }
+    }
+  }
+  //Check down
+  if (letter + 1 <= 25)
+  {
+    if (board[letter + 1][number] != 0)
+    {
+      if (countTiles(letter + 1, number, 3) < 6)
+      {
+        down = true;
+      }
+    }
+  }
+  //Check up
+  if (letter - 1 >= 0)
+  {
+    if (board[letter - 1][number] != 0)
+    {
+      if (countTiles(letter + 1, number, 1) < 6)
+      {
+        up = true;
+      }
+    }
+  }
+  if (right && left && up && down)
+  {
+    retVal = true;
+  }
+  else
+  {
+    retVal = false;
+  }
+  return retVal;
+}
+
+int GameEngine::countTiles(int letter, int number, int direction)
+{
+  int numTiles = 0;
+  if (direction == 0)
+  {
+    //Count left
+    for (int i = 0; i < 6; i++)
+    {
+      if (number - i >= 0)
+      {
+        if (board[letter][number - i] != 0)
+        {
+          numTiles++;
+        }
+      }
+    }
+  }
+  else if (direction == 1)
+  {
+    //Count up
+    for (int i = 0; i < 6; i++)
+    {
+      if (letter - i >= 0)
+      {
+        if (board[letter - i][number] != 0)
+        {
+          numTiles++;
+        }
+      }
+    }
+  }
+  else if (direction == 2)
+  {
+    //Count right
+    for (int i = 0; i < 6; i++)
+    {
+      if (number + i >= 0)
+      {
+        if (board[letter][number + i] != 0)
+        {
+          numTiles++;
+        }
+      }
+    }
+  }
+  else
+  {
+    //Count down
+    for (int i = 0; i < 6; i++)
+    {
+      if (letter + i >= 0)
+      {
+        if (board[letter + i][number] != 0)
+        {
+          numTiles++;
+        }
+      }
+    }
+  }
+  return numTiles;
 }

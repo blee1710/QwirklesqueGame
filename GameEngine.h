@@ -36,7 +36,9 @@ public:
   char numberToLetter(int number);
   void clearBoardMemory();
   void playerAction(std::string action);
-  void help();
+  bool checkSurround(int letter, int number);
+  int countTiles(int letter, int number, int direction);
+  void takeAction();
 
 
 private:

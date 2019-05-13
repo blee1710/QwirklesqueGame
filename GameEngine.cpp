@@ -261,7 +261,7 @@ void GameEngine::makeBag()
     {
       for (unsigned int z = 0; z < NO_OF_EACH_TILE; z++)
       {
-        tileBag->addBack(new Tile(colourMap[x], shapeMap[y]));
+        tileBag.addBack(new Tile(colourMap[x], shapeMap[y]));
       }
     }
   }
@@ -270,8 +270,8 @@ void GameEngine::makeBag()
   {
     std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE - 1 - i);
     index = uniform_dist(engine);
-    tileBag.addBack(new Tile( *(tileBag->getTileAt(index) )));
-    tileBag->deleteAt(index);
+    tileBag.addBack(new Tile( *(tileBag.getTileAt(index) )));
+    tileBag.deleteAt(index);
   }
 }
 

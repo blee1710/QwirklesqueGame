@@ -255,26 +255,23 @@ void GameEngine::makeBag()
   std::default_random_engine engine(1);
   std::map<int, char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN}, {4, BLUE}, {5, PURPLE}};
   std::map<int, int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE}, {4, STAR_6}, {5, CLOVER}};
-  LinkedList* fullTileBag = new LinkedList();
-
   for (unsigned int x = 0; x < colourMap.size(); x++)
   {
     for (unsigned int y = 0; y < shapeMap.size(); y++)
     {
       for (unsigned int z = 0; z < NO_OF_EACH_TILE; z++)
       {
-        fullTileBag->addBack(new Tile(colourMap[x], shapeMap[y]));
+        tileBag->addBack(new Tile(colourMap[x], shapeMap[y]));
       }
     }
   }
-
   int index = 0;
   for (int i = 0; i < MAX_NO_OF_TILE; i++)
   {
     std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE - 1 - i);
     index = uniform_dist(engine);
-    tileBag.addBack(new Tile( *(fullTileBag->getTileAt(index) )));
-    fullTileBag->deleteAt(index);
+    tileBag.addBack(new Tile( *(tileBag->getTileAt(index) )));
+    tileBag->deleteAt(index);
   }
 }
 

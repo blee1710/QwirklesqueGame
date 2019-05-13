@@ -39,6 +39,7 @@ public:
   bool checkSurround(int letter, int number);
   int countTiles(int letter, int number, int direction);
   void readInCommand();
+  int countPoints(int letter, int number);
 
   void help();
 

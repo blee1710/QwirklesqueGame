@@ -537,6 +537,30 @@ void GameEngine::saveHighScores()
   }
 }
 
+int GameEngine::countPoints(int letter, int number){
+  int linesAffected = 0;
+  int pointsScored = 0;
+  int leftCount = countTiles(letter, number, 0);
+  int rightCount = countTiles(letter, number, 2);
+  int upCount = countTiles(letter, number, 1);
+  int downCount = countTiles(letter, number, 3);
+
+  int check [] = {leftCount, rightCount, upCount, downCount};
+
+  for(int surrTiles : check){
+    if(surrTiles > 0){
+      linesAffected++;
+      pointsScored++;
+      pointsScored+=surrTiles;
+      //qwirkle check
+      if(surrTiles == 5){
+        pointsScored += 6;
+      }
+    }
+  }
+  return pointsScored;
+}
+
 void GameEngine::help()
 {
   std::cout << "Qwirkle Game version 1.0- release Help Guide\n"

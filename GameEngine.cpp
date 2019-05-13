@@ -103,7 +103,7 @@ void GameEngine::placeTile(std::string tile, std::string location, int index)
   }
   else
   {
-    if (checkSurround(letter, number))
+    if (checkSurround(tileObj, letter, number))
     {
       currentPlayer->getHandPtr()->deleteAt(index);
       currentPlayer->drawTile(tileBag.getTileAt(0));
@@ -125,7 +125,7 @@ void GameEngine::replaceTile()
 //Function for converting A to 0, B to 1 etc.
 int GameEngine::letterToNumber(char letter)
 {
-  int index;
+  int index = 0;
   char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
   for (int i = 0; i < 26; i++)
   {
@@ -270,11 +270,10 @@ void GameEngine::makeBag()
   {
     std::uniform_int_distribution<int> uniform_dist(0, MAX_NO_OF_TILE - 1 - i);
     index = uniform_dist(engine);
-    tileBag.addBack(new Tile( *(tileBag.getTileAt(index) )));
+    tileBag.addBack(new Tile(*(tileBag.getTileAt(index))));
     tileBag.deleteAt(index);
   }
 }
-
 
 void GameEngine::executeCommand(std::string action)
 {
@@ -328,22 +327,27 @@ void GameEngine::executeCommand(std::string action)
 
 //Passes in the coordinate of the tile being placed
 //Checks if there are tiles surrounding it
-bool GameEngine::checkSurround(int letter, int number)
+bool GameEngine::checkSurround(Tile *tile, int letter, int number)
 {
   bool left = false;
   bool up = false;
   bool right = false;
   bool down = false;
+  bool leftExists = false;
+  bool upExists = false;
+  bool rightExists = false;
+  bool downExists = false;
   bool retVal;
+  int tileCount;
+
   //Check left
   if (number - 1 >= 0)
   {
+    //If there is a tile to the left of where we are placing the tile
     if (board[letter][number - 1] != 0)
     {
-      if (countTiles(letter, number - 1, 0) < 6)
-      {
-        left = true;
-      }
+      std::cout << "left exists" << std::endl;
+      leftExists = true;
     }
   }
   //Check right
@@ -351,10 +355,8 @@ bool GameEngine::checkSurround(int letter, int number)
   {
     if (board[letter][number + 1] != 0)
     {
-      if (countTiles(letter, number + 1, 2) < 6)
-      {
-        right = true;
-      }
+      std::cout << "right exists" << std::endl;
+      rightExists = true;
     }
   }
   //Check down
@@ -362,10 +364,8 @@ bool GameEngine::checkSurround(int letter, int number)
   {
     if (board[letter + 1][number] != 0)
     {
-      if (countTiles(letter + 1, number, 3) < 6)
-      {
-        down = true;
-      }
+      std::cout << "down exists" << std::endl;
+      downExists = true;
     }
   }
   //Check up
@@ -373,13 +373,125 @@ bool GameEngine::checkSurround(int letter, int number)
   {
     if (board[letter - 1][number] != 0)
     {
-      if (countTiles(letter + 1, number, 1) < 6)
-      {
-        up = true;
-      }
+      upExists = true;
+      std::cout << "up exists" << std::endl;
     }
   }
-  if (right || left || up || down)
+  //if there is at least one tile that exists
+  if (rightExists || leftExists || upExists || downExists)
+  {
+    if (leftExists)
+    {
+      //If theres less than 6 tiles in the row
+      tileCount = countTiles(letter, number - 1, 0);
+      if (tileCount < 6)
+      {
+        //If there is only one tile, then a rule hasn't been defined yet for that row
+        if (tileCount == 1)
+        {
+          left = oneTileCheck(tile, letter, number, 0);
+        }
+        else
+        {
+          left = manyTileCheck(tile, tileCount, letter, number, 0);
+        }
+      }
+      else
+      {
+        std::cout << "Exceeding 6 tiles!" << std::endl;
+      }
+    }
+    else
+    {
+      //If it doesn't exist then it's also true
+      left = true;
+    }
+    if (rightExists)
+    {
+      //If theres less than 6 tiles in the row
+      tileCount = countTiles(letter, number + 1, 2);
+      if (tileCount < 6)
+      {
+        //If there is only one tile, then a rule hasn't been defined yet for that row
+        if (tileCount == 1)
+        {
+          right = oneTileCheck(tile, letter, number, 2);
+        }
+        else
+        {
+          right = manyTileCheck(tile, tileCount, letter, number, 2);
+        }
+      }
+      else
+      {
+        std::cout << "Exceeding 6 tiles!" << std::endl;
+      }
+    }
+    else
+    {
+      //If it doesn't exist then it's also true
+      right = true;
+    }
+    if (upExists)
+    {
+      //If theres less than 6 tiles in the row
+      tileCount = countTiles(letter - 1, number, 1);
+      if (tileCount < 6)
+      {
+        //If there is only one tile, then a rule hasn't been defined yet for that row
+        if (tileCount == 1)
+        {
+          up = oneTileCheck(tile, letter, number, 1);
+        }
+        else
+        {
+          up = manyTileCheck(tile, tileCount, letter, number, 1);
+        }
+      }
+      else
+      {
+        std::cout << "Exceeding 6 tiles!" << std::endl;
+      }
+    }
+    else
+    {
+      //If it doesn't exist then it's also true
+      up = true;
+    }
+    if (downExists)
+    {
+      //If theres less than 6 tiles in the row
+      tileCount = countTiles(letter + 1, number, 3);
+      if (tileCount < 6)
+      {
+        //If there is only one tile, then a rule hasn't been defined yet for that row
+        if (tileCount == 1)
+        {
+          down = oneTileCheck(tile, letter, number, 3);
+        }
+        else
+        {
+          down = manyTileCheck(tile, tileCount, letter, number, 3);
+        }
+      }
+      else
+      {
+        std::cout << "Exceeding 6 tiles!" << std::endl;
+      }
+    }
+    else
+    {
+      //If it doesn't exist then it's also true
+      down = true;
+    }
+  }
+  else
+  {
+    std::cout << "Must place next to a preexisting tile!" << std::endl;
+    retVal = false;
+  }
+
+  if (left && up && right && down)
   {
     retVal = true;
   }
@@ -387,6 +499,7 @@ bool GameEngine::checkSurround(int letter, int number)
   {
     retVal = false;
   }
+
   return retVal;
 }
 
@@ -536,7 +649,8 @@ void GameEngine::saveHighScores()
   }
 }
 
-int GameEngine::countPoints(int letter, int number){
+int GameEngine::countPoints(int letter, int number)
+{
   int linesAffected = 0;
   int pointsScored = 0;
   int leftCount = countTiles(letter, number, 0);
@@ -544,15 +658,18 @@ int GameEngine::countPoints(int letter, int number){
   int upCount = countTiles(letter, number, 1);
   int downCount = countTiles(letter, number, 3);
 
-  int check [] = {leftCount, rightCount, upCount, downCount};
+  int check[] = {leftCount, rightCount, upCount, downCount};
 
-  for(int surrTiles : check){
-    if(surrTiles > 0){
+  for (int surrTiles : check)
+  {
+    if (surrTiles > 0)
+    {
       linesAffected++;
       pointsScored++;
-      pointsScored+=surrTiles;
+      pointsScored += surrTiles;
       //qwirkle check
-      if(surrTiles == 5){
+      if (surrTiles == 5)
+      {
         pointsScored += 6;
       }
     }
@@ -575,4 +692,146 @@ void GameEngine::help()
             << "Tile Syntax of Tile is Colours+Shapes (Tile codes defined below)\n"
             << "RED 'R', ORANGE 'O', YELLOW 'Y', GREEN  'G', BLUE   'B', PURPLE 'P'\n"
             << "CIRCLE  1, STAR_4  2, DIAMOND  3, SQUARE  4, STAR_6  5, CLOVER  6\n";
+}
+
+bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
+{
+  int l;
+  int n;
+  bool retVal;
+  setLN(l, n, direction);
+  std::cout << "One tile check" << std::endl;
+  //If not a duplicate, check if either colour or shape match
+  if (!checkDuplicate(tile, letter + l, number + n))
+  {
+    std::cout << "Check Duplicate for one tile" << std::endl;
+    bool colourMatch = false;
+    bool shapeMatch = false;
+    if (tile->getColour() == board[letter + l][number + n]->getColour())
+    {
+      std::cout << "One tile check colour match" << std::endl;
+      colourMatch = true;
+    }
+    else if (tile->getShape() == board[letter + l][number + n]->getShape())
+    {
+      std::cout << "One tile check shape match" << std::endl;
+      shapeMatch = true;
+    }
+    if (colourMatch || shapeMatch)
+    {
+      retVal = true;
+    }
+  }
+  else
+  {
+    std::cout << "Duplicate tile detected!" << std::endl;
+    retVal = false;
+  }
+  return retVal;
+}
+
+bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction)
+{
+  bool duplicates;
+  bool retVal = false;
+  int l;
+  int n;
+  setLN(l, n, direction);
+  //Checks if there are duplicates in the row
+  for (int i = 0; i < tileCount; i++)
+  {
+    //Check if no duplicates
+    if (checkDuplicate(tile, letter, number - (i + 1)))
+    {
+      duplicates = true;
+      //Terminate checking as soon as there is one duplicate
+      i = tileCount;
+    }
+    else
+    {
+      duplicates = false;
+    }
+  }
+  if (!duplicates)
+  {
+    //Determines rule
+    Colour first = board[letter + l][number + n]->getColour();
+    Colour second = board[letter + (2 * l)][number + (2 * n)]->getColour();
+    //If colour matches, then the rule is colour
+    if (first == second)
+    {
+      if (tile->getColour() == first)
+      {
+        retVal = true;
+      }
+      else
+      {
+        std::cout << "Colour doesn't match" << std::endl;
+      }
+    }
+    //Rule is shape
+    else
+    {
+      if (tile->getShape() == board[letter][number - 1]->getShape())
+      {
+        retVal = true;
+      }
+      else
+      {
+        std::cout << "Shape doesn't match" << std::endl;
+      }
+    }
+  }
+  else
+  {
+    std::cout << "Duplicate tile detected!" << std::endl;
+  }
+  return retVal;
+}
+
+void GameEngine::setLN(int &l, int &n, int direction)
+{
+  if (direction == 0)
+  {
+    l = 0;
+    n = -1;
+  }
+  else if (direction == 1)
+  {
+    l = -1;
+    n = 0;
+  }
+  else if (direction == 2)
+  {
+    l = 0;
+    n = 1;
+  }
+  else
+  {
+    l = 1;
+    n = 0;
+  }
+}
+
+//Test for duplicate tiles in rows/columns, returns TRUE if duplicate
+bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
+{
+  //Assume that board[letter][number] is never null
+  bool duplicate = false;
+  bool colourMatch = false;
+  bool shapeMatch = false;
+  if (tile->getColour() == board[letter][number]->getColour())
+  {
+    colourMatch = true;
+  }
+  if (tile->getShape() == board[letter][number]->getShape())
+  {
+    shapeMatch = true;
+  }
+  if (colourMatch && shapeMatch)
+  {
+    std::cout << "COLOUR AND SHAPE MATCH DUPLICATE" << std::endl;
+    duplicate = true;
+  }
+  return duplicate;
 }

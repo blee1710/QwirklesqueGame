@@ -36,21 +36,24 @@ public:
   char numberToLetter(int number);
   void clearBoardMemory();
   void executeCommand(std::string action);
-  bool checkSurround(int letter, int number);
+  bool checkSurround(Tile *tile, int letter, int number);
   int countTiles(int letter, int number, int direction);
   void readInCommand();
   int countPoints(int letter, int number);
 
   void help();
-
+  bool checkDuplicate(Tile *tile, int letter, int number);
+  bool oneTileCheck(Tile *tile, int letter, int number, int direction);
+  bool manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction);
+  void setLN(int &l, int &n, int direction);
 
 private:
   LinkedList tileBag;
-  Player* currentPlayer;
-  Player* playerArray[2];
+  Player *currentPlayer;
+  Player *playerArray[2];
   int numPlayers;
   int turn;
-  Tile* board[26][26];
+  Tile *board[26][26];
 
   void saveHighScores();
   void printHighScores();

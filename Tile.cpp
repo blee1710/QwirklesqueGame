@@ -41,6 +41,15 @@ std::string Tile::toString2()
     return tile;
 }
 
+Colour Tile::getColour()
+{
+    return colour;
+}
+
+Shape Tile::getShape()
+{
+    return shape;
+}
 // Test Code for alt imp colour
 //
 // std::string Tile::toString()

@@ -18,6 +18,8 @@ public:
    Tile(Tile& otherTile);
    std::string toString();
    std::string toString2();
+   Colour getColour();
+   Shape getShape();
 };
 
 #endif // ASSIGN2_TILE_H

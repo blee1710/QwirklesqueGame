@@ -49,6 +49,7 @@ public:
   bool manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction);
   void setLN(int &l, int &n, int direction);
   void giveHint();
+  void aiMove();
 
 private:
   LinkedList tileBag;
@@ -59,6 +60,8 @@ private:
   int turn;
   Tile *board[26][26];
   int currentTurn = 0;
+  int tilesPlaced = 0;
+  bool isSinglePlayer = false;
 
   void saveHighScores();
   void printHighScores();

@@ -9,7 +9,7 @@ void menu();
 void newGame();
 void loadGame();
 void showStudentInfo();
-
+void newSinglePlayerGame();
 GameEngine* ge;
 
 int main(void)
@@ -36,9 +36,10 @@ void menu()
    std::cout << "Menu" << std::endl;
    std::cout << "----" << std::endl;
    std::cout << "1. New Game" << std::endl;
-   std::cout << "2. Load Game" << std::endl;
-   std::cout << "3. Show student information" << std::endl;
-   std::cout << "4. Quit" << std::endl;
+   std::cout << "2. New Game (SinglePlayer) WIP" << std::endl;
+   std::cout << "3. Load Game" << std::endl;
+   std::cout << "4. Show student information" << std::endl;
+   std::cout << "5. Quit" << std::endl;
 
    std::cin >> command;
    std::cout<<std::endl;
@@ -48,9 +49,13 @@ void menu()
    }
    else if (command == 2)
    {
-      loadGame();
+      newSinglePlayerGame();
    }
    else if (command == 3)
+   {
+      loadGame();
+   }
+   else if (command == 4)
    {
       showStudentInfo();
    }
@@ -128,6 +133,22 @@ void newGame()
    ge->drawInitialTiles();
    //Start with player 1 then keep Alternating between player's turns until game ends.
    ge->mainLoop();
+}
+
+void newSinglePlayerGame(){
+  std::string playerName;
+  std::cout << "Starting a New Game\n"<< std::endl;
+
+  std::cout << "Enter a name for player 1 (uppercase characters only)" << '\n';
+  std::cin >> playerName;
+  ge->addPlayer(playerName);
+
+  //Add random tiles to tileBag with Danny's random tile generation method.
+  ge->makeBag();
+  //Draw 6 tiles into each player's hands
+  ge->drawInitialTiles();
+  //Start with player 1 then keep Alternating between player's turns until game ends.
+  ge->mainLoop();
 }
 
 void loadGame()

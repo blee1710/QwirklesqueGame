@@ -41,6 +41,7 @@ public:
   int countTiles(int letter, int number, int direction);
   void readInCommand();
   int countPoints(int letter, int number);
+  bool replaceTile(int index);
 
   void help();
   bool checkDuplicate(Tile *tile, int letter, int number);

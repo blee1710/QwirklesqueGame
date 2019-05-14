@@ -688,6 +688,8 @@ void GameEngine::help()
             << "List of functions the user can call on the Qwirkle game\n\n"
             << "help\n"
             << "Displays all the possible commands that can be called by the user on the Qwirkle game.\n\n"
+            << "hint\n"
+            << "Gives a hint as to where the current player can place the current tiles in their hand onto the board\n\n"
             << "place <tile> at <grid location>\n"
             << "Adds tile to the specified location if both tile and location are legal arguments and represents a placement of a tile that is legal according to the rules of Qwirkle.\n\n"
             << "replace <tile>\n"
@@ -858,8 +860,35 @@ void GameEngine::giveHint(){
     }
   }
   std::cout.clear();
-  for (unsigned int i = 0 ; i < hints.size() ; i++){
-    std::cout << "Place Tile: " << hints.at(i).tile->getColour() << hints.at(i).tile->getShape()
-    << " at "  << numberToLetter(hints.at(i).l) << hints.at(i).n << " Which is gives you " << hints.at(i).score << " points." << std::endl;
+  if(hints.size() == 0){
+    std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
+  }
+  else{
+    for (unsigned int i = 0 ; i < hints.size() ; i++){
+      std::cout << "Place Tile: " << hints.at(i).tile->getColour() << hints.at(i).tile->getShape()
+      << " at "  << numberToLetter(hints.at(i).l) << hints.at(i).n << " Which gives you " << hints.at(i).score << " points." << std::endl;
+    }
+
+
+    // FOR AI IMPLEMENTATION WIP
+
+    int largestScore = hints.at(0).score;
+    std::vector<locationAndScore> maxHints;
+    for (unsigned int i = 1 ; i < hints.size() ; i++){
+      if(hints.at(i).score > largestScore){
+        largestScore = hints.at(i).score;
+      }
+    }
+    for (unsigned int i = 0 ; i < hints.size() ; i++){
+      if(hints.at(i).score == largestScore){
+        maxHints.push_back(hints.at(i));
+      }
+    }
+
+    std::random_device engine;
+    std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
+    int randomIndex = uniform_dist(engine);
+    std::cout << "(For AI) And a random tile with the greatest score is, Place Tile " << maxHints.at(randomIndex).tile->getColour() << maxHints.at(randomIndex).tile->getShape()
+    << " at "  << numberToLetter(maxHints.at(randomIndex).l) << maxHints.at(randomIndex).n << " Which gives you " << maxHints.at(randomIndex).score << " points." << std::endl;
   }
 }

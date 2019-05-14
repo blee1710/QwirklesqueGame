@@ -130,8 +130,13 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
   return retVal;
 }
 
-void GameEngine::replaceTile()
+bool GameEngine::replaceTile(int index)
 {
+    Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
+    currentPlayer->getHandPtr()->deleteAt(index);
+    tileBag.addBack(tileObj);
+    currentPlayer->drawTile(tileBag.getTileAt(0));
+    return true;
 }
 
 //Function for converting A to 0, B to 1 etc.
@@ -312,6 +317,33 @@ void GameEngine::executeCommand(std::string action)
 
       bool placeCheck = placeTile(tile, location, index);
       if(placeCheck){
+        alternateTurns();
+      }
+    }
+    else
+    {
+      std::cout << "You don't have that tile" << std::endl;
+      readInCommand();
+    }
+  }
+  else if (action.substr(0,7) == "replace"){
+    std::string tile = action.substr(8,2);
+    //bit of code duplication here
+    for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+    {
+      Tile *tileObj = currentPlayer->getHand().getTileAt(i);
+      if (tileObj->toString2() == tile)
+      {
+        valid = true;
+        index = i;
+        //Early Termination
+        i = currentPlayer->getHand().getSize();
+      }
+    }
+    if (valid)
+    {
+      bool replaceCheck = replaceTile(index);
+      if(replaceCheck){
         alternateTurns();
       }
     }

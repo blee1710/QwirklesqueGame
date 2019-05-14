@@ -90,16 +90,37 @@ void menu()
 
 void newGame()
 {
-   std::string player1;
-   std::string player2;
+   std::string playerName;
+   std::string playerCount;
+   bool valid = false;
+   int playerAmount;
    std::cout << "Starting a New Game\n"<< std::endl;
-   std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
-   std::cin >> player1;
-   ge->addPlayer(player1);
-   std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
-   std::cin >> player2;
-   ge->addPlayer(player2);
-   std::cout << "Alright, " << player1 << " and " << player2 << ", Let's Play!" << std::endl;
+
+   while(!valid) {
+     std::cout << "Please enter amount of players (2-4)" << '\n';
+     std::cin >> playerCount;
+     playerAmount = std::stoi(playerCount);
+     if(playerAmount > 0 && playerAmount <= 4){
+       valid = true;
+     }
+   }
+
+   for(int i = 0; i < playerAmount; i++){
+     std::cout << "Enter a name for player " + std::to_string(i+1) + " (uppercase characters only)" << '\n';
+     std::cin >> playerName;
+     ge->addPlayer(playerName);
+   }
+
+
+   // //----------
+   // std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
+   // std::cin >> player1;
+   // ge->addPlayer(player1);
+   // std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
+   // std::cin >> player2;
+   // ge->addPlayer(player2);
+   // std::cout << "Alright, " << player1 << " and " << player2 << ", Let's Play!" << std::endl;
+   //----------
 
    //Add random tiles to tileBag with Danny's random tile generation method.
    ge->makeBag();

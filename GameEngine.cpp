@@ -28,17 +28,11 @@ void GameEngine::saveGame(std::string filename)
   std::ofstream outFile;
   outFile.open(filename);
 
-  // Writing out player data
-  outFile << playerArray[0]->getName() << std::endl;
-  outFile << playerArray[0]->getScore() << std::endl;
-  // Would probabbly want a toString method for LinkedList so that it prints out
-  // the list in the format needed. Would be way more efficent than doing it in
-  // the GameEngine ('for' loop that would call some sort of getAt(i) method).
-  outFile << playerArray[0]->getHand().toString2() << std::endl;
-
-  outFile << playerArray[1]->getName() << std::endl;
-  outFile << playerArray[1]->getScore() << std::endl;
-  outFile << playerArray[1]->getHand().toString2() << std::endl;
+  for(int i = 0; i < playerArray.size(); i++) {
+    outFile << playerArray[i]->getName() << std::endl;
+    outFile << playerArray[i]->getScore() << std::endl;
+    outFile << playerArray[i]->getHand().toString2() << std::endl;
+  }
 
   // Writing out board to file
   outFile << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20"
@@ -81,9 +75,11 @@ void GameEngine::loadGame(std::string filename)
 
 void GameEngine::addPlayer(std::string name)
 {
-  playerArray[numPlayers] = new Player(name);
+  playerArray.push_back(new Player(name));
+  //playerArray[numPlayers] = new Player(name);
   numPlayers++;
 }
+
 
 bool GameEngine::placeTile(std::string tile, std::string location, int index)
 {
@@ -204,16 +200,26 @@ void GameEngine::readInCommand()
 
 void GameEngine::alternateTurns()
 {
-  if (currentPlayer == playerArray[0])
-  {
-    currentPlayer = playerArray[1];
+  if(currentTurn == playerArray.size() - 1){
+    currentTurn = 0;
+    turn++;
+  } else {
+    currentTurn++;
     turn++;
   }
-  else
-  {
-    currentPlayer = playerArray[0];
-    turn++;
-  }
+
+  currentPlayer = playerArray[currentTurn];
+
+  // if (currentPlayer == playerArray[0])
+  // {
+  //   currentPlayer = playerArray[1];
+  //   turn++;
+  // }
+  // else
+  // {
+  //   currentPlayer = playerArray[0];
+  //   turn++;
+  // }
 }
 
 void GameEngine::clearBoardMemory()

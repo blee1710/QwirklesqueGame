@@ -1,8 +1,8 @@
-
 #ifndef ASSIGN2_GAME_ENGINE_H
 #define ASSIGN2_GAME_ENGINE_H
 
 #include <string>
+#include <vector>
 
 #include "LinkedList.h"
 #include "Player.h"
@@ -50,10 +50,12 @@ public:
 private:
   LinkedList tileBag;
   Player *currentPlayer;
-  Player *playerArray[2];
+//  Player *playerArray[4];
+  std::vector<Player*> playerArray;
   int numPlayers;
   int turn;
   Tile *board[26][26];
+  int currentTurn = 0;
 
   void saveHighScores();
   void printHighScores();

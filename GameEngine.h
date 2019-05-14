@@ -37,6 +37,7 @@ public:
   void clearBoardMemory();
   void executeCommand(std::string action);
   bool checkSurround(Tile *tile, int letter, int number);
+
   int countTiles(int letter, int number, int direction);
   void readInCommand();
   int countPoints(int letter, int number);
@@ -46,6 +47,7 @@ public:
   bool oneTileCheck(Tile *tile, int letter, int number, int direction);
   bool manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction);
   void setLN(int &l, int &n, int direction);
+  void giveHint();
 
 private:
   LinkedList tileBag;

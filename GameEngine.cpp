@@ -325,6 +325,10 @@ void GameEngine::executeCommand(std::string action)
   {
     help();
   }
+  else if (action.substr(0, 4) == "hint")
+  {
+    giveHint();
+  }
   else if (action.substr(0, 4) == "save")
   {
     std::string filename = action.substr(5);
@@ -697,7 +701,7 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
 
 bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction)
 {
-  bool duplicates;
+  bool duplicates = false;
   bool retVal = false;
   int l;
   int n;
@@ -797,4 +801,33 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
     duplicate = true;
   }
   return duplicate;
+}
+
+void GameEngine::giveHint(){
+
+  struct locationAndScore {
+      int l;
+      int n;
+      int score;
+      Tile* tile;
+  };
+  std::vector<locationAndScore> hints;
+  std::cout.setstate(std::ios_base::failbit);
+  for(int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++){
+    for(int y = 0; y < BOARD_SIZE; y++){
+      for(int x = 0; x < BOARD_SIZE; x++){
+        if(board[x][y] == 0){
+          if(checkSurround(currentPlayer->getHandPtr()->getTileAt(z),x,y)){
+            struct locationAndScore newHint = {x,y,countPoints(x,y),currentPlayer->getHandPtr()->getTileAt(z)};
+            hints.push_back(newHint);
+          }
+        }
+      }
+    }
+  }
+  std::cout.clear();
+  for (unsigned int i = 0 ; i < hints.size() ; i++){
+    std::cout << "Place Tile: " << hints.at(i).tile->getColour() << hints.at(i).tile->getShape()
+    << " at "  << numberToLetter(hints.at(i).l) << hints.at(i).n << " Which is gives you " << hints.at(i).score << " points." << std::endl;
+  }
 }

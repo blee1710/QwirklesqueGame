@@ -21,7 +21,7 @@ public:
 
   //Game Functions
   void addPlayer(std::string name);
-  void placeTile(std::string tile, std::string location, int index);
+  bool placeTile(std::string tile, std::string location, int index);
   void replaceTile();
 
   //NewGame Functions

@@ -85,7 +85,7 @@ void GameEngine::addPlayer(std::string name)
   numPlayers++;
 }
 
-void GameEngine::placeTile(std::string tile, std::string location, int index)
+bool GameEngine::placeTile(std::string tile, std::string location, int index)
 {
   //String manipulation to access letter and number as ints
   std::string lstring = location.substr(0, 1);
@@ -100,6 +100,7 @@ void GameEngine::placeTile(std::string tile, std::string location, int index)
     currentPlayer->drawTile(tileBag.getTileAt(0));
     tileBag.deleteFront();
     board[letter][number] = tileObj;
+    return true;
   }
   else
   {
@@ -109,11 +110,13 @@ void GameEngine::placeTile(std::string tile, std::string location, int index)
       currentPlayer->drawTile(tileBag.getTileAt(0));
       tileBag.deleteFront();
       board[letter][number] = tileObj;
+      return true;
     }
     else
     {
       std::cout << "You can't place a tile there" << std::endl;
       readInCommand();
+      return false;
     }
   }
 }
@@ -299,8 +302,10 @@ void GameEngine::executeCommand(std::string action)
     {
       std::string location = action.substr(12, 14);
 
-      placeTile(tile, location, index);
-      alternateTurns();
+      bool placeCheck = placeTile(tile, location, index);
+      if(placeCheck){
+        alternateTurns();
+      }
     }
     else
     {
@@ -698,7 +703,7 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
 {
   int l;
   int n;
-  bool retVal;
+  bool retVal = false;
   setLN(l, n, direction);
   std::cout << "One tile check" << std::endl;
   //If not a duplicate, check if either colour or shape match

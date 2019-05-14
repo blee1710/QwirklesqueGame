@@ -351,7 +351,6 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     //If there is a tile to the left of where we are placing the tile
     if (board[letter][number - 1] != 0)
     {
-      std::cout << "left exists" << std::endl;
       leftExists = true;
     }
   }
@@ -360,7 +359,6 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   {
     if (board[letter][number + 1] != 0)
     {
-      std::cout << "right exists" << std::endl;
       rightExists = true;
     }
   }
@@ -369,7 +367,6 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   {
     if (board[letter + 1][number] != 0)
     {
-      std::cout << "down exists" << std::endl;
       downExists = true;
     }
   }
@@ -379,7 +376,6 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     if (board[letter - 1][number] != 0)
     {
       upExists = true;
-      std::cout << "up exists" << std::endl;
     }
   }
   //if there is at least one tile that exists
@@ -705,32 +701,28 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
   int n;
   bool retVal = false;
   setLN(l, n, direction);
-  std::cout << "One tile check" << std::endl;
   //If not a duplicate, check if either colour or shape match
   if (!checkDuplicate(tile, letter + l, number + n))
   {
-    std::cout << "Check Duplicate for one tile" << std::endl;
     bool colourMatch = false;
     bool shapeMatch = false;
     if (tile->getColour() == board[letter + l][number + n]->getColour())
     {
-      std::cout << "One tile check colour match" << std::endl;
       colourMatch = true;
     }
     else if (tile->getShape() == board[letter + l][number + n]->getShape())
     {
-      std::cout << "One tile check shape match" << std::endl;
       shapeMatch = true;
     }
     if (colourMatch || shapeMatch)
     {
       retVal = true;
     }
-  }
-  else
-  {
-    std::cout << "Duplicate tile detected!" << std::endl;
-    retVal = false;
+    else
+    {
+      std::cout<<"Colour or shape must match "<<board[letter + l][number + n]->toString2()<<std::endl;
+      retVal = false;
+    }
   }
   return retVal;
 }
@@ -743,10 +735,11 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
   int n;
   setLN(l, n, direction);
   //Checks if there are duplicates in the row
-  for (int i = 0; i < tileCount; i++)
+  //Check for each tile in the direction.
+  for (int i = 1; i <= tileCount; i++)
   {
     //Check if no duplicates
-    if (checkDuplicate(tile, letter, number - (i + 1)))
+    if (checkDuplicate(tile, letter + l*i, number + n*i))
     {
       duplicates = true;
       //Terminate checking as soon as there is one duplicate
@@ -777,7 +770,7 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
     //Rule is shape
     else
     {
-      if (tile->getShape() == board[letter][number - 1]->getShape())
+      if (tile->getShape() == board[letter + l][number + n]->getShape())
       {
         retVal = true;
       }
@@ -786,10 +779,6 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
         std::cout << "Shape doesn't match" << std::endl;
       }
     }
-  }
-  else
-  {
-    std::cout << "Duplicate tile detected!" << std::endl;
   }
   return retVal;
 }
@@ -835,7 +824,8 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
   }
   if (colourMatch && shapeMatch)
   {
-    std::cout << "COLOUR AND SHAPE MATCH DUPLICATE" << std::endl;
+    std::cout<<"Duplicate tile detected!"<<std::endl;
+    std::cout << tile->toString2()<<" already exists at " <<numberToLetter(letter)<<number<<std::endl;
     duplicate = true;
   }
   return duplicate;

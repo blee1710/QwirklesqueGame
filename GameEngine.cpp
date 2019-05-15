@@ -854,21 +854,18 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
   return duplicate;
 }
 
-void GameEngine::giveHint(){
-
-  struct locationAndScore {
-      int l;
-      int n;
-      int score;
-      Tile* tile;
-  };
-  std::vector<locationAndScore> hints;
+std::vector<GameEngine::locationAndScore> GameEngine::generateHints(){
+  std::vector<GameEngine::locationAndScore> hints;
   std::cout.setstate(std::ios_base::failbit);
   for(int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++){
-    for(int y = 0; y < BOARD_SIZE; y++){
-      for(int x = 0; x < BOARD_SIZE; x++){
-        if(board[x][y] == 0){
-          if(checkSurround(currentPlayer->getHandPtr()->getTileAt(z),x,y)){
+    for(int y = 0; y < BOARD_SIZE; y++)
+    {
+      for(int x = 0; x < BOARD_SIZE; x++)
+      {
+        if(board[x][y] == 0)
+        {
+          if(checkSurround(currentPlayer->getHandPtr()->getTileAt(z),x,y))
+          {
             struct locationAndScore newHint = {x,y,countPoints(x,y),currentPlayer->getHandPtr()->getTileAt(z)};
             hints.push_back(newHint);
           }
@@ -877,6 +874,11 @@ void GameEngine::giveHint(){
     }
   }
   std::cout.clear();
+  return hints;
+}
+
+void GameEngine::giveHint(){
+  std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
   if(tilesPlaced == 0){
     std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
   }
@@ -884,64 +886,23 @@ void GameEngine::giveHint(){
     std::cout << "You cannot place a tile. You need to replace a tile." << std::endl;
   }
   else{
-    for (unsigned int i = 0 ; i < hints.size() ; i++){
-      std::cout << "Place Tile: " << hints.at(i).tile->getColour() << hints.at(i).tile->getShape()
-      << " at "  << numberToLetter(hints.at(i).l) << hints.at(i).n << " Which gives you " << hints.at(i).score << " points." << std::endl;
-    }
-
-
-    // FOR AI IMPLEMENTATION WIP
-
-    int largestScore = hints.at(0).score;
-    std::vector<locationAndScore> maxHints;
-    for (unsigned int i = 1 ; i < hints.size() ; i++){
-      if(hints.at(i).score > largestScore){
-        largestScore = hints.at(i).score;
-      }
-    }
-    for (unsigned int i = 0 ; i < hints.size() ; i++){
-      if(hints.at(i).score == largestScore){
-        maxHints.push_back(hints.at(i));
-      }
-    }
-
-    std::random_device engine;
-    std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
-    int randomIndex = uniform_dist(engine);
-    std::cout << "(For AI) And a random tile with the greatest score is, Place Tile " << maxHints.at(randomIndex).tile->getColour() << maxHints.at(randomIndex).tile->getShape()
-    << " at "  << numberToLetter(maxHints.at(randomIndex).l) << maxHints.at(randomIndex).n << " Which gives you " << maxHints.at(randomIndex).score << " points." << std::endl;
+      std::random_device engine;
+      std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
+      int randomIndex = uniform_dist(engine);
+      std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
+      << " at "  << numberToLetter(hints.at(randomIndex).l) << hints.at(randomIndex).n <<
+      " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
   }
 }
 
 void GameEngine::aiMove(){
   bool placeAITile = true;
-  struct locationAndScore {
-      int l;
-      int n;
-      int score;
-      Tile* tile;
-  };
-  std::vector<locationAndScore> hints;
-  std::cout.setstate(std::ios_base::failbit);
-  for(int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++){
-    for(int y = 0; y < BOARD_SIZE; y++){
-      for(int x = 0; x < BOARD_SIZE; x++){
-        if(board[x][y] == 0){
-          if(checkSurround(currentPlayer->getHandPtr()->getTileAt(z),x,y)){
-            struct locationAndScore newHint = {x,y,countPoints(x,y),currentPlayer->getHandPtr()->getTileAt(z)};
-            hints.push_back(newHint);
-          }
-        }
-      }
-    }
-  }
-  std::cout.clear();
+  std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
 
   if(hints.size() == 0){
     replaceTile(0);
     placeAITile = false;
   }
-    // FOR AI IMPLEMENTATION WIP
 
   if(placeAITile){
       int largestScore = hints.at(0).score;
@@ -961,10 +922,10 @@ void GameEngine::aiMove(){
       std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
       int randomIndex = uniform_dist(engine);
 
-      int index = 0;
       std::string location = numberToLetter(maxHints.at(randomIndex).l) + std::to_string(maxHints.at(randomIndex).n);
       std::string tile = maxHints.at(randomIndex).tile->toString2();
       //If tile is in hand, call place Tile
+      int index = 0;
       for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
       {
         Tile *tileObj = currentPlayer->getHand().getTileAt(i);
@@ -975,6 +936,7 @@ void GameEngine::aiMove(){
           i = currentPlayer->getHand().getSize();
         }
       }
+      std::cout << "The AI has placed " << tile << " at " << location << std::endl; 
       placeTile(tile, location, index);
     }
     alternateTurns();

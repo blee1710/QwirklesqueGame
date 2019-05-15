@@ -50,7 +50,13 @@ public:
   void setLN(int &l, int &n, int direction);
   void giveHint();
   void aiMove();
-
+  struct locationAndScore {
+      int l;
+      int n;
+      int score;
+      Tile* tile;
+  };
+  std::vector<GameEngine::locationAndScore> generateHints();
 private:
   LinkedList tileBag;
   Player *currentPlayer;
@@ -65,6 +71,7 @@ private:
 
   void saveHighScores();
   void printHighScores();
+
 };
 
 #endif // ASSIGN2_GAME_ENGINE_H

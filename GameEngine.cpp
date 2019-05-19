@@ -174,7 +174,7 @@ void GameEngine::addTile(Tile tile)
 void GameEngine::drawInitialTiles()
 {
   if(playerArray.size() == 1){
-    this->addPlayer("AI");
+    this->addPlayer("$AI");
     isSinglePlayer = true;
   }
   for (Player *p : playerArray)
@@ -936,7 +936,7 @@ void GameEngine::aiMove(){
           i = currentPlayer->getHand().getSize();
         }
       }
-      std::cout << "The AI has placed " << tile << " at " << location << std::endl; 
+      std::cout << "The AI has placed " << tile << " at " << location << std::endl;
       placeTile(tile, location, index);
     }
     alternateTurns();

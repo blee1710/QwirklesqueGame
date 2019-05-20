@@ -761,7 +761,7 @@ int GameEngine::countPoints(int letter, int number)
     if (array[i] == 5)
     {
       std::cout << "QWIRKLE!" << std::endl;
-      array[i] = 12;
+      array[i] = 11;
     }
   }
 

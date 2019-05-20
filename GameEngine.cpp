@@ -28,7 +28,10 @@ void GameEngine::saveGame(std::string filename)
   outFile.open(filename);
 
   for(unsigned int i = 0; i < playerArray.size(); i++) {
-    outFile << playerArray[i]->getName() << std::endl;
+    if (playerArray[i]->getName() == "AI") {
+      outFile << "$AI" << std::endl;
+    }
+    else outFile << playerArray[i]->getName() << std::endl;
     outFile << playerArray[i]->getScore() << std::endl;
     outFile << playerArray[i]->getHand().toString2() << std::endl;
   }
@@ -78,7 +81,11 @@ void GameEngine::loadGame(std::string filename)
   for (int i = 0; i < 2; i++) {
     std::string playerName;
     std::getline(in, playerName);
-    addPlayer(playerName);
+    if (playerName == "$AI") {
+      addPlayer("AI");
+      isSinglePlayer = true;
+    }
+    else addPlayer(playerName);
 
     std::string playerScoreString;
     std::getline(in, playerScoreString);

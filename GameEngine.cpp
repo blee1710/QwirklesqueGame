@@ -27,6 +27,7 @@ void GameEngine::saveGame(std::string filename)
   std::ofstream outFile;
   outFile.open(filename);
 
+  outFile << numPlayers << std::endl;
   for(unsigned int i = 0; i < playerArray.size(); i++) {
     if (playerArray[i]->getName() == "AI") {
       outFile << "$AI" << std::endl;
@@ -76,9 +77,13 @@ void GameEngine::loadGame(std::string filename)
   std::ifstream in;
   in.open(filename);
 
+  std::string noPlayersString;
+  std::getline(in, noPlayersString);
+  int noPlayers = stoi(noPlayersString);
+
   // Reading player 1 and 2 data from file.
   // Loop runs twice to load in data for each player
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < noPlayers; i++) {
     std::string playerName;
     std::getline(in, playerName);
     if (playerName == "$AI") {
@@ -256,7 +261,7 @@ void GameEngine::addTile(Tile tile)
 void GameEngine::drawInitialTiles()
 {
   if(playerArray.size() == 1){
-    this->addPlayer("$AI");
+    this->addPlayer("AI");
     isSinglePlayer = true;
   }
   for (Player *p : playerArray)

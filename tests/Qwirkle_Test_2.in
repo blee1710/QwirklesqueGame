@@ -1,3 +1,4 @@
+2
 Player1
 27
 R4,B5,Y2,B5,P6,P3
@@ -35,5 +36,5 @@ Z |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 R1,R2,R3,R5,R6,R1,R2,R3,R5,O1,O2,O3,O4,O5,O6,O2,Y1,Y4,Y5,Y6,Y5,Y6,G1,G2,G3,G4,G5,G6,G1,G5,G6,B1,B2,B3,B4,B6,B1,B2,B3,P1,P2,P5,P6,P1,P2,P5
 Player1
 replace Y2
-replace G3 
+replace G3
 save savedGame

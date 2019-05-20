@@ -50,6 +50,7 @@ public:
   void setLN(int &l, int &n, int direction);
   void giveHint();
   void aiMove();
+  void loadPlaceTile(int x, int y, Tile* tile);
   struct locationAndScore {
       int l;
       int n;

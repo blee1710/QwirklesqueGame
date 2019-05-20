@@ -655,14 +655,20 @@ int GameEngine::countTiles(int letter, int number, int direction)
   setLN(l, n, direction);
   for (int i = 1; i < 6; i++)
   {
-    if (board[letter + i * l][number + i * n] != 0)
-    {
-      numTiles++;
-    }
-    else
-    {
-      //Early Termination
-      i = 6;
+    //qwirle error
+    int vert = letter + i * l;
+    int hori = number + i * n;
+
+    if (vert >= 0 && hori >=0){
+      if (board[vert][hori] != 0)
+      {
+        numTiles++;
+      }
+      else
+      {
+        //Early Termination
+        i = 6;
+      }
     }
   }
   return numTiles;
@@ -757,6 +763,9 @@ int GameEngine::countPoints(int letter, int number)
 {
   //Count the tiles surrounding it
   int points = 0;
+  if(turn == 0){
+    points++;
+  }
   int array[4];
   array[0] = countTiles(letter, number, 0);
   array[1] = countTiles(letter, number, 1);
@@ -767,17 +776,18 @@ int GameEngine::countPoints(int letter, int number)
   {
     if (array[i] == 5)
     {
+      std::cout << "array: " << i << std::endl;
       std::cout << "QWIRKLE!" << std::endl;
       array[i] = 11;
     }
   }
 
-  for (int i = 0; i < 4; i++)
+  for (int score : array)
   {
-    if(array[i] > 0){
+    if(score > 0){
       points++;
     }
-    points += array[i];
+    points += score;
   }
 
   return points;
@@ -980,10 +990,13 @@ void GameEngine::giveHint(){
 }
 
 void GameEngine::aiMove(){
+  std::cout << "seg fault1" << '\n';
   bool placeAITile = true;
+  std::cout << "seg fault2" << '\n';
   std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
+  std::cout << "seg fault pass" << '\n';
 
-  if(hints.size() == 0){
+  if(hints.empty()){
     replaceTile(0);
     placeAITile = false;
   }

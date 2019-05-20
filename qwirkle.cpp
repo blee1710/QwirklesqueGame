@@ -157,7 +157,7 @@ void loadGame()
    std::string filename;
    std::cin >> filename;
    ge->loadGame(filename);
-
+   ge->mainLoop();
 }
 
 void showStudentInfo()

@@ -1,11 +1,11 @@
 .default: all
 
-all: qwirkle
+all: unit_tests
 
 clean:
-	rm -rf qwirkle *.o *.dSYM
+	rm -rf unit_tests *.o *.dSYM
 
-qwirkle: Tile.o Node.o LinkedList.o GameEngine.o Player.o qwirkle.o
+unit_tests: Tile.o Node.o LinkedList.o GameEngine.o Player.o unit_tests.o
 	g++ -Wall -Werror -std=c++14 -g -O -o $@ $^
 
 %.o: %.cpp

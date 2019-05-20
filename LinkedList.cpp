@@ -65,10 +65,12 @@ std::string LinkedList::toString() {
 std::string LinkedList::toString2() {
   std::string listString;
   Node* curr = head;
-  for(int i = 0; i < size; i++) {
-    listString += (curr->getTile()->toString2() + " ");
+  for(int i = 0; i < size - 1 ; i++) {
+    listString += (curr->getTile()->toString2() + ",");
     curr = curr->next;
   }
+  listString += curr->getTile()->toString2();
+
   return listString;
 }
 

@@ -13,7 +13,7 @@
 
 GameEngine::GameEngine()
 {
-  std::cout << "ENGINE CREATED" << std::endl;
+  clearBoardMemory();
   numPlayers = 0;
   turn = 0;
 }
@@ -22,7 +22,6 @@ GameEngine::~GameEngine()
 {
 }
 
-// Barebones imlementation of saveGame method.
 void GameEngine::saveGame(std::string filename)
 {
   std::ofstream outFile;
@@ -36,7 +35,7 @@ void GameEngine::saveGame(std::string filename)
 
   // Writing out board to file
   outFile << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20"
-          << " 22 23 24 25" << std::endl;
+          << " 21 22 23 24 25" << std::endl;
   outFile << "-----------------------------------------------------------------"
           << "----------------" << std::endl;
 
@@ -48,9 +47,9 @@ void GameEngine::saveGame(std::string filename)
     outFile << letter << " |";
     for (int j = 0; j < BOARD_SIZE; j++)
     {
-      if (/*board[i][j] != null*/ 0)
+      if (board[i][j] !=  0)
       {
-        outFile << /*board[i][j] << */ "|";
+        outFile << board[i][j]->toString2() << "|";
       }
       else
       {
@@ -71,6 +70,82 @@ void GameEngine::saveGame(std::string filename)
 
 void GameEngine::loadGame(std::string filename)
 {
+  std::ifstream in;
+  in.open(filename);
+
+  // Reading player 1 and 2 data from file.
+  // Loop runs twice to load in data for each player
+  for (int i = 0; i < 2; i++) {
+    std::string playerName;
+    std::getline(in, playerName);
+    addPlayer(playerName);
+
+    std::string playerScoreString;
+    std::getline(in, playerScoreString);
+    int playerScore = std::stoi(playerScoreString);
+    playerArray.at(i)->addPoints(playerScore);
+
+    std::string playerHand;
+    std::getline(in, playerHand);
+    // while loop to add all tiles in the string to player hand.
+    std::istringstream playerHandStream(playerHand);
+    std::string tile;
+    while (std::getline(playerHandStream, tile, ',')) {
+      char colour = tile.at(0);
+      int shape = stoi(tile.substr(1));
+      playerArray.at(i)->drawTile(new Tile(colour, shape));
+    }
+  }
+
+  // Reading board state from file.
+  std::string boardRow;
+  // Skips over first two lines that contain no useful information.
+  std::getline(in, boardRow);
+  std::getline(in, boardRow);
+  // Loop runs for the number of rows of the board
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    std::getline(in, boardRow);
+    // Begins scanning the single row, checking if each 'space' is empty.
+    // 'k' value used for keeping track of the currnt column (x value) the
+    // program is at. Current row (y value) is 'i'.
+    int k = 0;
+    for (int j = 3; j < boardRow.length() - 1; j += 3) {
+      if (boardRow.at(j) != ' ') {
+        char colour = boardRow.at(j);
+        int shape = stoi(boardRow.substr(j+1));
+        loadPlaceTile(k, i, new Tile(colour, shape));
+      }
+      k++;
+    }
+  }
+
+  // Reading the tile bag form file
+  std::string tileBagString;
+  std::getline(in, tileBagString);
+  // while loop to add all tiles in the string to tile bag
+  std::istringstream tileBagStream(tileBagString);
+  std::string tile;
+  while (std::getline(tileBagStream, tile, ',')) {
+    char colour = tile.at(0);
+    int shape = stoi(tile.substr(1));
+    tileBag.addBack(new Tile(colour, shape));
+  }
+
+  // Reading the current player from file
+  std::string currentPlayerString;
+  std::getline(in, currentPlayerString);
+  for (int i = 0; i < playerArray.size(); i++) {
+    if (currentPlayerString == playerArray[i]->getName()) {
+      currentPlayer = playerArray[i];
+      currentTurn = i;
+    }
+  }
+  in.close();
+}
+
+// places tile when loading a game without checking the game rules
+void GameEngine::loadPlaceTile(int x, int y, Tile* tile) {
+  board[y][x] = tile;
 }
 
 void GameEngine::addPlayer(std::string name)
@@ -192,7 +267,6 @@ void GameEngine::drawInitialTiles()
 void GameEngine::mainLoop()
 {
   currentPlayer = &*playerArray[0];
-  clearBoardMemory();
   while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
   {
     if(!isSinglePlayer || currentTurn % 2 == 0){
@@ -936,7 +1010,7 @@ void GameEngine::aiMove(){
           i = currentPlayer->getHand().getSize();
         }
       }
-      std::cout << "The AI has placed " << tile << " at " << location << std::endl; 
+      std::cout << "The AI has placed " << tile << " at " << location << std::endl;
       placeTile(tile, location, index);
     }
     alternateTurns();

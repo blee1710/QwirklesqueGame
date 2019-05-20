@@ -256,7 +256,7 @@ void GameEngine::addTile(Tile tile)
 void GameEngine::drawInitialTiles()
 {
   if(playerArray.size() == 1){
-    this->addPlayer("AI");
+    this->addPlayer("$AI");
     isSinglePlayer = true;
   }
   for (Player *p : playerArray)
@@ -756,7 +756,7 @@ void GameEngine::saveHighScores()
 int GameEngine::countPoints(int letter, int number)
 {
   //Count the tiles surrounding it
-  int points = 1;
+  int points = 0;
   int array[4];
   array[0] = countTiles(letter, number, 0);
   array[1] = countTiles(letter, number, 1);
@@ -774,6 +774,9 @@ int GameEngine::countPoints(int letter, int number)
 
   for (int i = 0; i < 4; i++)
   {
+    if(array[i] > 0){
+      points++;
+    }
     points += array[i];
   }
 

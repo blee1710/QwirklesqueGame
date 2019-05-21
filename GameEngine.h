@@ -63,9 +63,9 @@ public:
       Tile* tile;
   };
   std::vector<GameEngine::locationAndScore> generateHints();
+  Player *currentPlayer;
 private:
   LinkedList tileBag;
-  Player *currentPlayer;
 //  Player *playerArray[4];
   std::vector<Player*> playerArray;
   int numPlayers;

@@ -793,7 +793,6 @@ int GameEngine::countPoints(int letter, int number)
   {
     if (array[i] == 5)
     {
-      std::cout << "array: " << i << std::endl;
       std::cout << "QWIRKLE!" << std::endl;
       array[i] = 11;
     }
@@ -1054,6 +1053,3 @@ void GameEngine::aiMove(){
     }
     alternateTurns();
 }
-
-
-            // valgrind --track-origin=yes

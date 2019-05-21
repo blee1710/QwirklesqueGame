@@ -7,7 +7,7 @@
 #define EXIT_SUCCESS    0
 
 #define REQUIRED_ARGS           1
-#define NO_OF_SKIPPED_LINES    31
+#define NO_OF_SKIPPED_LINES    32
 #define NUM_PLAYER_LINES        3
 
 //Functions
@@ -246,9 +246,14 @@ void executeCommands(char** argv) {
   ge->printBoard();
 
   while(std::getline(in, command)) {
-    ge->executeCommand(command);
     std::cout << command << std::endl;
+
+    ge->executeCommand(command);
+    if (ge->currentPlayer->getName() == "AI") {
+      ge->aiMove();
+    }
     ge->printBoard();
+
 
   }
   in.close();

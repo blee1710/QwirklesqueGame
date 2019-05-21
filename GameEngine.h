@@ -35,7 +35,7 @@ public:
   int letterToNumber(char letter);
   char numberToLetter(int number);
   void clearBoardMemory();
-  void executeCommand(std::string action);
+  bool executeCommand(std::string action);
   bool checkSurround(Tile *tile, int letter, int number);
 
   int countTiles(int letter, int number, int direction);

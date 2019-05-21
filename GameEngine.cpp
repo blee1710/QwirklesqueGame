@@ -202,7 +202,6 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
     if (board[letter][number] != 0)
     {
       std::cout << "There's already a tile there!" << std::endl;
-      readInCommand();
       retVal = false;
     }
     else
@@ -219,7 +218,6 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
       else
       {
         std::cout << "You can't place a tile there" << std::endl;
-        readInCommand();
         retVal = false;
       }
     }
@@ -327,7 +325,10 @@ void GameEngine::readInCommand()
   {
     std::getline(std::cin, action);
   }
-  executeCommand(action);
+
+  if (!executeCommand(action)) {
+    readInCommand();
+  }
 }
 
 void GameEngine::alternateTurns()
@@ -405,8 +406,9 @@ void GameEngine::makeBag()
   }
 }
 
-void GameEngine::executeCommand(std::string action)
+bool GameEngine::executeCommand(std::string action)
 {
+  bool retVal = true;
   bool valid = false;
   int index = 0;
   if (action.substr(0, 5) == "place" && action.substr(9, 2) == "at")
@@ -438,7 +440,7 @@ void GameEngine::executeCommand(std::string action)
     else
     {
       std::cout << "You don't have that tile" << std::endl;
-      readInCommand();
+      retVal = false;
     }
   }
   else if (action.substr(0,7) == "replace"){
@@ -465,7 +467,7 @@ void GameEngine::executeCommand(std::string action)
     else
     {
       std::cout << "You don't have that tile" << std::endl;
-      readInCommand();
+      retVal = false;
     }
   }
   else if (action.substr(0, 4) == "help")
@@ -484,9 +486,10 @@ void GameEngine::executeCommand(std::string action)
   else
   {
     std::cout << "Unrecognised command" << std::endl;
-    std::getline(std::cin, action);
-    executeCommand(action);
+    retVal = false;
   }
+
+  return retVal;
 }
 
 //Passes in the coordinate of the tile being placed

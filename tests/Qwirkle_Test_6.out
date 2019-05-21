@@ -5,7 +5,7 @@ Player1
 P5,R5,G3,B3,B2,B5
 Player2
 7
-Y6,P2,R6,Y1,P1,B5
+Y6,P2,R6,Y1,P1,Y3
 Player3
 9
 Y2,R2,B6,B4,P4,G1
@@ -42,4 +42,3 @@ Y |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
 Z |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 B4,R1,G3,G2,R4,G4,G5,R1,R3,O3,Y5,G6,P4,R2,O2,Y1,P6,R3,O4,Y4,R5,B1,B2,O1,P3,P1,P5,P6,O6,Y3,Y6,O4,B6,Y4,O2,B3,Y5
 Player4
-save savedGame

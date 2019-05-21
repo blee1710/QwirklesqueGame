@@ -158,8 +158,25 @@ void newGame()
    ge->drawInitialTiles();
    //Start with player 1 then keep Alternating between player's turns until game ends.
    ge->mainLoop();
-   // Saves highscore at the end of the GameEngine
    ge->saveHighScores();
+   //ending sequence
+   std::cout << "Game Over" << std::endl;
+   int highestScore = 0;
+   std::string winner;
+   for (Player *player : playerArray)
+   {
+     int endScore = player->getScore();
+     if (endScore > highestScore)
+     {
+       highestScore = endScore;
+       winner = player->getName();
+     }
+     std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
+   }
+
+   std::cout << "Player " << winner << "won!" << '\n';
+   // quit function
+
 }
 
 void newSinglePlayerGame(){

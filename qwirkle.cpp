@@ -129,6 +129,7 @@ void newGame()
    for(int i = 0; i < playerAmount; i++){
      std::cout << "Enter a name for player " + std::to_string(i+1) + " (uppercase characters only)" << '\n';
      std::cin >> playerName;
+     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
      ge->addPlayer(playerName);
    }
 

@@ -17,7 +17,6 @@
 #define INITIAL_NUM_PLAYERS 0
 #define INITIAL_TURN_COUNT 0
 #define NULL_TILE 0
-#define LETTERS_IN_ALPHABET 26
 #define MAX_HAND_SIZE 6
 
 GameEngine::GameEngine()
@@ -263,25 +262,15 @@ bool GameEngine::replaceTile(int index)
 //Function for converting A to 0, B to 1 etc.
 int GameEngine::letterToNumber(char letter)
 {
-  int index = 0;
-  char alphabet[LETTERS_IN_ALPHABET] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-  for (int i = 0; i < LETTERS_IN_ALPHABET; i++)
-  {
-    if (letter == alphabet[i])
-    {
-      index = i;
-      //Early termination
-      i = LETTERS_IN_ALPHABET;
-    }
-  }
-  return index;
+  int number = letter - 65;
+  return number;
 }
 
 //Function for converting A to 0, B to 1 etc.
 char GameEngine::numberToLetter(int number)
 {
-  char alphabet[LETTERS_IN_ALPHABET] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-  return alphabet[number];
+  char letter = number + 65;
+  return letter;
 }
 
 //All players populate their hands
@@ -361,7 +350,7 @@ void GameEngine::mainLoop()
 void GameEngine::readInCommand()
 {
   std::string action;
-  std::cout << ">";
+  std::cout << "> ";
   //Eat the line if necessary
   std::getline(std::cin, action);
   if (action == "")
@@ -404,8 +393,10 @@ void GameEngine::clearBoardMemory()
 
 void GameEngine::printBoard()
 {
-  std::cout << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25" << std::endl;
-  std::cout << "---------------------------------------------------------------------------------" << std::endl;
+  std::cout << "   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 "
+            << "20 21 22 23 24 25" << std::endl;
+  std::cout << "---------------------------------------------------------------"
+            << "------------------" << std::endl;
   //Print all 26 rows
 
   for (int i = 0; i < BOARD_SIZE; i++)
@@ -879,8 +870,8 @@ void GameEngine::help()
             << "save <filename>\n"
             << "Saves the current state of the game in an output file with the name the user specified.\n\n"
             << "Tile Syntax of Tile is Colours+Shapes (Tile codes defined below)\n"
-            << "RED 'R', ORANGE 'O', YELLOW 'Y', GREEN  'G', BLUE   'B', PURPLE 'P'\n"
-            << "CIRCLE  1, STAR_4  2, DIAMOND  3, SQUARE  4, STAR_6  5, CLOVER  6\n";
+            << "\033[31mRED 'R'\033[0m, \033[91mORANGE 'O'\033[0m, \033[33mYELLOW 'Y'\033[0m, \033[32mGREEN  'G'\033[0m, \033[34mBLUE   'B'\033[0m, \033[35mPURPLE 'P'\033[0m\n"
+            << "CIRCLE (\U000025CB)  1, STAR_4 (\U00002B51)  2, DIAMOND (\U000025CA)  3, SQUARE (\U000025A1)  4, STAR_6 (\U00002734)  5, CLOVER (\U00002663)  6\n";
 }
 
 bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
@@ -1010,22 +1001,16 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
 {
   //Assume that board[letter][number] is never null
   bool duplicate = false;
-  bool colourMatch = false;
-  bool shapeMatch = false;
-  if (tile->getColour() == board[letter][number]->getColour())
-  {
-    colourMatch = true;
-  }
-  if (tile->getShape() == board[letter][number]->getShape())
-  {
-    shapeMatch = true;
-  }
-  if (colourMatch && shapeMatch)
+
+  if (tile->getColour() == board[letter][number]->getColour() &&
+      tile->getShape() == board[letter][number]->getShape())
   {
     std::cout << "Duplicate tile detected!" << std::endl;
-    std::cout << tile->toString2() << " already exists at " << numberToLetter(letter) << number << std::endl;
+    std::cout << tile->toString2() << " already exists at "
+              << numberToLetter(letter) << number << std::endl;
     duplicate = true;
   }
+  
   return duplicate;
 }
 

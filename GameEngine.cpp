@@ -222,7 +222,10 @@ bool GameEngine::replaceTile(int index)
     Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
     currentPlayer->getHandPtr()->deleteAt(index);
     tileBag.addBack(tileObj);
+    // NOT DRAWING PROPERLY
     currentPlayer->drawTile(tileBag.getTileAt(0));
+    tileBag.deleteFront();
+
     return true;
 }
 

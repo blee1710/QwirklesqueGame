@@ -35,7 +35,7 @@ void Player::printTiles()
         {
             std::cout << hand.getTileAt(i)->toString2()<<std::endl<<std::endl;
         }
-        
+
     }
 }
 

@@ -160,8 +160,10 @@ void newGame()
    ge->drawInitialTiles();
    //Start with player 1 then keep Alternating between player's turns until game ends.
    ge->mainLoop();
-   // Saves highscore at the end of the GameEngine
    ge->saveHighScores();
+   //ending sequence
+   // quit function
+
 }
 
 void newSinglePlayerGame(){

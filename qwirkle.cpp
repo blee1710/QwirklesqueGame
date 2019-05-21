@@ -21,6 +21,7 @@ GameEngine* ge;
 bool checkArgs(int argc, char** argv);
 bool checkFile(std::string &filename);
 void executeCommands(char** argv);
+bool isNameUpper(std::string name);
 
 int main(int argc, char** argv)
 {
@@ -109,6 +110,8 @@ void menu()
    // } while (command != 4);
 }
 
+
+
 void newGame()
 {
    std::string playerName;
@@ -126,10 +129,15 @@ void newGame()
      }
    }
 
+
    for(int i = 0; i < playerAmount; i++){
-     std::cout << "Enter a name for player " + std::to_string(i+1) + " (uppercase characters only)" << '\n';
-     std::cin >> playerName;
-     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+     valid = false;
+     while(!valid){
+       std::cout << "Enter a name for player " + std::to_string(i+1) + " (uppercase characters only)" << '\n';
+       std::cin >> playerName;
+       std::cin.ignore(256, '\n');
+       valid = isNameUpper(playerName);
+     }
      ge->addPlayer(playerName);
    }
 
@@ -252,5 +260,14 @@ void executeCommands(char** argv) {
 
   }
   in.close();
+}
+
+bool isNameUpper(std::string name){
+  for(char c:name){
+    if(!isupper(c)){
+      return false;
+    }
+  }
+  return true;
 }
 //

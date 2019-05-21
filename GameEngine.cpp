@@ -29,11 +29,14 @@ void GameEngine::saveGame(std::string filename)
 
   outFile << turn << std::endl;
   outFile << numPlayers << std::endl;
-  for(unsigned int i = 0; i < playerArray.size(); i++) {
-    if (playerArray[i]->getName() == "AI") {
+  for (unsigned int i = 0; i < playerArray.size(); i++)
+  {
+    if (playerArray[i]->getName() == "AI")
+    {
       outFile << "$AI" << std::endl;
     }
-    else outFile << playerArray[i]->getName() << std::endl;
+    else
+      outFile << playerArray[i]->getName() << std::endl;
     outFile << playerArray[i]->getScore() << std::endl;
     outFile << playerArray[i]->getHand().toString2() << std::endl;
   }
@@ -52,7 +55,7 @@ void GameEngine::saveGame(std::string filename)
     outFile << letter << " |";
     for (int j = 0; j < BOARD_SIZE; j++)
     {
-      if (board[i][j] !=  0)
+      if (board[i][j] != 0)
       {
         outFile << board[i][j]->toString2() << "|";
       }
@@ -88,14 +91,17 @@ void GameEngine::loadGame(std::string filename)
 
   // Reading player 1 and 2 data from file.
   // Loop runs twice to load in data for each player
-  for (int i = 0; i < noPlayers; i++) {
+  for (int i = 0; i < noPlayers; i++)
+  {
     std::string playerName;
     std::getline(in, playerName);
-    if (playerName == "$AI") {
+    if (playerName == "$AI")
+    {
       addPlayer("AI");
       isSinglePlayer = true;
     }
-    else addPlayer(playerName);
+    else
+      addPlayer(playerName);
 
     std::string playerScoreString;
     std::getline(in, playerScoreString);
@@ -107,7 +113,8 @@ void GameEngine::loadGame(std::string filename)
     // while loop to add all tiles in the string to player hand.
     std::istringstream playerHandStream(playerHand);
     std::string tile;
-    while (std::getline(playerHandStream, tile, ',')) {
+    while (std::getline(playerHandStream, tile, ','))
+    {
       char colour = tile.at(0);
       int shape = stoi(tile.substr(1));
       playerArray.at(i)->drawTile(new Tile(colour, shape));
@@ -120,16 +127,19 @@ void GameEngine::loadGame(std::string filename)
   std::getline(in, boardRow);
   std::getline(in, boardRow);
   // Loop runs for the number of rows of the board
-  for (int i = 0; i < BOARD_SIZE; i++) {
+  for (int i = 0; i < BOARD_SIZE; i++)
+  {
     std::getline(in, boardRow);
     // Begins scanning the single row, checking if each 'space' is empty.
     // 'k' value used for keeping track of the currnt column (x value) the
     // program is at. Current row (y value) is 'i'.
     int k = 0;
-    for (unsigned int j = 3; j < boardRow.length() - 1; j += 3) {
-      if (boardRow.at(j) != ' ') {
+    for (unsigned int j = 3; j < boardRow.length() - 1; j += 3)
+    {
+      if (boardRow.at(j) != ' ')
+      {
         char colour = boardRow.at(j);
-        int shape = stoi(boardRow.substr(j+1));
+        int shape = stoi(boardRow.substr(j + 1));
         loadPlaceTile(k, i, new Tile(colour, shape));
       }
       k++;
@@ -142,7 +152,8 @@ void GameEngine::loadGame(std::string filename)
   // while loop to add all tiles in the string to tile bag
   std::istringstream tileBagStream(tileBagString);
   std::string tile;
-  while (std::getline(tileBagStream, tile, ',')) {
+  while (std::getline(tileBagStream, tile, ','))
+  {
     char colour = tile.at(0);
     int shape = stoi(tile.substr(1));
     tileBag.addBack(new Tile(colour, shape));
@@ -151,8 +162,10 @@ void GameEngine::loadGame(std::string filename)
   // Reading the current player from file
   std::string currentPlayerString;
   std::getline(in, currentPlayerString);
-  for (unsigned int i = 0; i < playerArray.size(); i++) {
-    if (currentPlayerString == playerArray[i]->getName()) {
+  for (unsigned int i = 0; i < playerArray.size(); i++)
+  {
+    if (currentPlayerString == playerArray[i]->getName())
+    {
       currentPlayer = playerArray[i];
       currentTurn = i;
     }
@@ -161,12 +174,14 @@ void GameEngine::loadGame(std::string filename)
 }
 
 // places tile when loading a game without checking the game rules
-void GameEngine::loadPlaceTile(int x, int y, Tile* tile) {
+void GameEngine::loadPlaceTile(int x, int y, Tile *tile)
+{
   board[y][x] = tile;
   tilesPlaced++;
 }
 
-int GameEngine::getNumPlayers() {
+int GameEngine::getNumPlayers()
+{
   return numPlayers;
 }
 
@@ -176,7 +191,6 @@ void GameEngine::addPlayer(std::string name)
   //playerArray[numPlayers] = new Player(name);
   numPlayers++;
 }
-
 
 bool GameEngine::placeTile(std::string tile, std::string location, int index)
 {
@@ -227,14 +241,14 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
 
 bool GameEngine::replaceTile(int index)
 {
-    Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
-    currentPlayer->getHandPtr()->deleteAt(index);
-    tileBag.addBack(tileObj);
-    // NOT DRAWING PROPERLY
-    currentPlayer->drawTile(tileBag.getTileAt(0));
-    tileBag.deleteFront();
+  Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
+  currentPlayer->getHandPtr()->deleteAt(index);
+  tileBag.addBack(tileObj);
+  // NOT DRAWING PROPERLY
+  currentPlayer->drawTile(tileBag.getTileAt(0));
+  tileBag.deleteFront();
 
-    return true;
+  return true;
 }
 
 //Function for converting A to 0, B to 1 etc.
@@ -271,7 +285,8 @@ void GameEngine::addTile(Tile tile)
 //All players populate their hands
 void GameEngine::drawInitialTiles()
 {
-  if(playerArray.size() == 1){
+  if (playerArray.size() == 1)
+  {
     this->addPlayer("AI");
     isSinglePlayer = true;
   }
@@ -292,17 +307,19 @@ void GameEngine::mainLoop()
   currentPlayer = &*playerArray[0];
   while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
   {
-    if(!isSinglePlayer || currentTurn % 2 == 0){
-    std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
-    for (int i = 0; i < numPlayers; i++)
+    if (!isSinglePlayer || currentTurn % 2 == 0)
     {
-      std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+      std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
+      for (int i = 0; i < numPlayers; i++)
+      {
+        std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+      }
+      printBoard();
+      currentPlayer->printTiles();
+      readInCommand();
     }
-    printBoard();
-    currentPlayer->printTiles();
-    readInCommand();
-    }
-    else{
+    else
+    {
       std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
       for (int i = 0; i < numPlayers; i++)
       {
@@ -313,6 +330,24 @@ void GameEngine::mainLoop()
       aiMove();
     }
   }
+
+  //ending sequence
+  std::cout << "Game Over" << std::endl;
+  int highestScore = 0;
+  std::string winner;
+  for (Player *player : playerArray)
+  {
+    int endScore = player->getScore();
+    if (endScore > highestScore)
+    {
+      highestScore = endScore;
+      winner = player->getName();
+    }
+    std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
+  }
+
+  std::cout << "Player " << winner << "won!" << '\n';
+  // quit function
 }
 
 void GameEngine::readInCommand()
@@ -333,10 +368,13 @@ void GameEngine::readInCommand()
 
 void GameEngine::alternateTurns()
 {
-  if((unsigned)currentTurn == playerArray.size() - 1){
+  if ((unsigned)currentTurn == playerArray.size() - 1)
+  {
     currentTurn = 0;
     turn++;
-  } else {
+  }
+  else
+  {
     currentTurn++;
     turn++;
   }
@@ -432,7 +470,8 @@ bool GameEngine::executeCommand(std::string action)
       std::string location = action.substr(12, 14);
 
       bool placeCheck = placeTile(tile, location, index);
-      if(placeCheck){
+      if (placeCheck)
+      {
         tilesPlaced += 1;
         alternateTurns();
       }
@@ -443,8 +482,9 @@ bool GameEngine::executeCommand(std::string action)
       retVal = false;
     }
   }
-  else if (action.substr(0,7) == "replace"){
-    std::string tile = action.substr(8,2);
+  else if (action.substr(0, 7) == "replace")
+  {
+    std::string tile = action.substr(8, 2);
     //bit of code duplication here
     for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
     {
@@ -460,7 +500,8 @@ bool GameEngine::executeCommand(std::string action)
     if (valid)
     {
       bool replaceCheck = replaceTile(index);
-      if(replaceCheck){
+      if (replaceCheck)
+      {
         alternateTurns();
       }
     }
@@ -679,7 +720,8 @@ int GameEngine::countTiles(int letter, int number, int direction)
     int vert = letter + i * l;
     int hori = number + i * n;
 
-    if (vert >= 0 && hori >=0){
+    if (vert >= 0 && hori >= 0)
+    {
       if (board[vert][hori] != 0)
       {
         numTiles++;
@@ -783,7 +825,8 @@ int GameEngine::countPoints(int letter, int number)
 {
   //Count the tiles surrounding it
   int points = 0;
-  if(turn == 0){
+  if (turn == 0)
+  {
     points++;
   }
   int array[4];
@@ -803,7 +846,8 @@ int GameEngine::countPoints(int letter, int number)
 
   for (int score : array)
   {
-    if(score > 0){
+    if (score > 0)
+    {
       points++;
     }
     points += score;
@@ -856,10 +900,14 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
     }
     else
     {
-      std::cout<<"Colour or shape must match "<<board[letter + l][number + n]->toString2()<<std::endl;
+      std::cout << "Colour or shape must match " << board[letter + l][number + n]->toString2() << std::endl;
       retVal = false;
     }
   }
+  // if(checkPriorDuplicate(letter,number))
+  // {
+  //   retVal = false;
+  // }
   return retVal;
 }
 
@@ -875,7 +923,7 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
   for (int i = 1; i <= tileCount; i++)
   {
     //Check if no duplicates
-    if (checkDuplicate(tile, letter + l*i, number + n*i))
+    if (checkDuplicate(tile, letter + l * i, number + n * i))
     {
       duplicates = true;
       //Terminate checking as soon as there is one duplicate
@@ -916,6 +964,10 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
       }
     }
   }
+  // if (checkPriorDuplicate(letter, number))
+  // {
+  //   retVal = false;
+  // }
   return retVal;
 }
 
@@ -960,26 +1012,93 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
   }
   if (colourMatch && shapeMatch)
   {
-    std::cout<<"Duplicate tile detected!"<<std::endl;
-    std::cout << tile->toString2()<<" already exists at " <<numberToLetter(letter)<<number<<std::endl;
+    std::cout << "Duplicate tile detected!" << std::endl;
+    std::cout << tile->toString2() << " already exists at " << numberToLetter(letter) << number << std::endl;
     duplicate = true;
   }
   return duplicate;
 }
 
-std::vector<GameEngine::locationAndScore> GameEngine::generateHints(){
+//Checks for prior duplicates if the tile being placed connects two preexisting rows/cols
+//Returns true if prior duplicates exist
+bool GameEngine::checkPriorDuplicate(int letter, int number)
+{
+  bool retVal = true;
+  //There aren't duplicates
+  bool noRowDupe = true;
+  bool noColDupe = true;
+  int leftCount;
+  int rightCount;
+  int upCount;
+  int downCount;
+
+  //Count the tiles relative to the current tile being placed
+  leftCount = countTiles(letter, number, 0);
+  rightCount = countTiles(letter, number, 2);
+  upCount = countTiles(letter, number, 1);
+  downCount = countTiles(letter, number, 3);
+
+  //Only 2 cases are:
+  //If left AND right exists, or if up AND down exists
+  if (leftCount > 0 && rightCount > 0)
+  {
+    for (int left = 0; left < leftCount; left++)
+    {
+      for (int right = 0; right < rightCount; right++)
+      {
+        std::string leftTile = board[letter][number - left]->toString2();
+        std::string rightTile = board[letter][number + right]->toString2();
+        //If any of the leftTiles are the same as any of the rightTiles
+        if (leftTile == rightTile)
+        {
+          std::cout << "Would cause duplicate in column " << numberToLetter(letter) << std::endl;
+          //There is a row dupe
+          noRowDupe = false;
+        }
+      }
+    }
+  }
+  if (upCount > 0 && downCount > 0)
+  {
+    for (int up = 0; up < upCount; up++)
+    {
+      for (int down = 0; down < downCount; down++)
+      {
+        std::string upTile = board[letter - up][number]->toString2();
+        std::string downTile = board[letter + down][number]->toString2();
+        //If any of the upTiles are the same as any of the downTiles
+        if (upTile == downTile)
+        {
+          std::cout << "Would cause duplicate in column " << number << std::endl;
+          //There is a column dupe
+          noColDupe = false;
+        }
+      }
+    }
+  }
+  //If there is no row dupe and no column dupe retVal is true, as in no dupes
+  if (noRowDupe && noColDupe)
+  {
+    retVal = false;
+  }
+  return retVal;
+}
+
+std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
+{
   std::vector<GameEngine::locationAndScore> hints;
   std::cout.setstate(std::ios_base::failbit);
-  for(int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++){
-    for(int y = 0; y < BOARD_SIZE; y++)
+  for (int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++)
+  {
+    for (int y = 0; y < BOARD_SIZE; y++)
     {
-      for(int x = 0; x < BOARD_SIZE; x++)
+      for (int x = 0; x < BOARD_SIZE; x++)
       {
-        if(board[x][y] == 0)
+        if (board[x][y] == 0)
         {
-          if(checkSurround(currentPlayer->getHandPtr()->getTileAt(z),x,y))
+          if (checkSurround(currentPlayer->getHandPtr()->getTileAt(z), x, y))
           {
-            struct locationAndScore newHint = {x,y,countPoints(x,y),currentPlayer->getHandPtr()->getTileAt(z)};
+            struct locationAndScore newHint = {x, y, countPoints(x, y), currentPlayer->getHandPtr()->getTileAt(z)};
             hints.push_back(newHint);
           }
         }
@@ -990,69 +1109,79 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints(){
   return hints;
 }
 
-void GameEngine::giveHint(){
-  if(tilesPlaced == 0){
+void GameEngine::giveHint()
+{
+  if (tilesPlaced == 0)
+  {
     std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
   }
-  else if(GameEngine::generateHints().empty()) {
+  else if (GameEngine::generateHints().empty())
+  {
     std::cout << "You cannot place a tile. You need to replace a tile." << std::endl;
   }
-  else{
-      std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
-      std::random_device engine;
-      std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
-      int randomIndex = uniform_dist(engine);
-      std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
-      << " at "  << numberToLetter(hints.at(randomIndex).l) << hints.at(randomIndex).n <<
-      " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
+  else
+  {
+    std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
+    std::random_device engine;
+    std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
+    int randomIndex = uniform_dist(engine);
+    std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
+              << " at " << numberToLetter(hints.at(randomIndex).l) << hints.at(randomIndex).n << " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
   }
 }
 
-void GameEngine::aiMove(){
+void GameEngine::aiMove()
+{
 
   bool placeAITile = true;
 
-  if(GameEngine::generateHints().empty()){
+  if (GameEngine::generateHints().empty())
+  {
     replaceTile(0);
     placeAITile = false;
   }
 
-  if(placeAITile){
-      std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
-      int largestScore = hints.at(0).score;
-      std::vector<locationAndScore> maxHints;
-      for (unsigned int i = 1 ; i < hints.size() ; i++){
-        if(hints.at(i).score > largestScore){
-          largestScore = hints.at(i).score;
-        }
-      }
-      for (unsigned int i = 0 ; i < hints.size() ; i++){
-        if(hints.at(i).score == largestScore){
-          maxHints.push_back(hints.at(i));
-        }
-      }
-
-      std::random_device engine;
-      std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
-      int randomIndex = uniform_dist(engine);
-
-      std::string location = numberToLetter(maxHints.at(randomIndex).l) + std::to_string(maxHints.at(randomIndex).n);
-      std::string tile = maxHints.at(randomIndex).tile->toString2();
-      //If tile is in hand, call place Tile
-      int index = 0;
-      for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+  if (placeAITile)
+  {
+    std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
+    int largestScore = hints.at(0).score;
+    std::vector<locationAndScore> maxHints;
+    for (unsigned int i = 1; i < hints.size(); i++)
+    {
+      if (hints.at(i).score > largestScore)
       {
-        Tile *tileObj = currentPlayer->getHand().getTileAt(i);
-        if (tileObj->toString2() == tile)
-        {
-          index = i;
-          //Early Termination
-          i = currentPlayer->getHand().getSize();
-        }
+        largestScore = hints.at(i).score;
       }
-      std::cout << "The AI has placed " << tile << " at " << location << std::endl;
-      placeTile(tile, location, index);
-      tilesPlaced++;
     }
-    alternateTurns();
+    for (unsigned int i = 0; i < hints.size(); i++)
+    {
+      if (hints.at(i).score == largestScore)
+      {
+        maxHints.push_back(hints.at(i));
+      }
+    }
+
+    std::random_device engine;
+    std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
+    int randomIndex = uniform_dist(engine);
+
+    std::string location = numberToLetter(maxHints.at(randomIndex).l) + std::to_string(maxHints.at(randomIndex).n);
+    std::string tile = maxHints.at(randomIndex).tile->toString2();
+    //If tile is in hand, call place Tile
+    int index = 0;
+    for (int i = 0; i < currentPlayer->getHand().getSize(); i++)
+    {
+      Tile *tileObj = currentPlayer->getHand().getTileAt(i);
+      if (tileObj->toString2() == tile)
+      {
+        index = i;
+        //Early Termination
+        i = currentPlayer->getHand().getSize();
+      }
+    }
+    std::cout << "The AI has placed " << tile << " at " << location << std::endl;
+    placeTile(tile, location, index);
+    tilesPlaced++;
+  }
+  alternateTurns();
 }

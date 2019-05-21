@@ -160,30 +160,6 @@ void newGame()
    ge->mainLoop();
    ge->saveHighScores();
    //ending sequence
-   std::cout << "Game Over" << std::endl;
-   int highestScore = 0;
-   std::string winner;
-   bool draw = false;
-   for (Player *player : ge->playerArray)
-   {
-     int endScore = player->getScore();
-     if (endScore > highestScore)
-     {
-       highestScore = endScore;
-       winner = player->getName();
-     }
-     else if (endScore == highestScore){
-       draw = true;
-       winner += player->getName() + ' ';
-     }
-     std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
-   }
-
-   if(draw){
-        std::cout << "Players " << winner << "drew!" << '\n';
-   } else {
-    std::cout << "Player " << winner << "won!" << '\n';
-  }
    // quit function
 
 }

@@ -164,7 +164,7 @@ void newGame()
    int highestScore = 0;
    std::string winner;
    bool draw = false;
-   for (Player *player : playerArray)
+   for (Player *player : ge->playerArray)
    {
      int endScore = player->getScore();
      if (endScore > highestScore)

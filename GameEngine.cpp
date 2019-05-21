@@ -332,6 +332,30 @@ void GameEngine::mainLoop()
       aiMove();
     }
   }
+  std::cout << "Game Over" << std::endl;
+  int highestScore = 0;
+  std::string winner;
+  bool draw = false;
+  for (Player *player : playerArray)
+  {
+    int endScore = player->getScore();
+    if (endScore > highestScore)
+    {
+      highestScore = endScore;
+      winner = player->getName();
+    }
+    else if (endScore == highestScore){
+      draw = true;
+      winner += player->getName() + ' ';
+    }
+    std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
+  }
+
+  if(draw){
+       std::cout << "Players " << winner << "drew!" << '\n';
+  } else {
+   std::cout << "Player " << winner << "won!" << '\n';
+ }
 }
 
 void GameEngine::readInCommand()
@@ -955,7 +979,7 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
   return retVal;
 }
 
-//A direction is passed in, and the corresponding horizontal and 
+//A direction is passed in, and the corresponding horizontal and
 //vertical translation is set in the method using l and n.
 void GameEngine::setLN(int &l, int &n, int direction)
 {

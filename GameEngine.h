@@ -51,6 +51,11 @@ public:
   void giveHint();
   void aiMove();
   void loadPlaceTile(int x, int y, Tile* tile);
+  int getNumPlayers();
+
+  void saveHighScores();
+  void printHighScores();
+
   struct locationAndScore {
       int l;
       int n;
@@ -69,10 +74,6 @@ private:
   int currentTurn = 0;
   int tilesPlaced = 0;
   bool isSinglePlayer = false;
-
-  void saveHighScores();
-  void printHighScores();
-
 };
 
 #endif // ASSIGN2_GAME_ENGINE_H

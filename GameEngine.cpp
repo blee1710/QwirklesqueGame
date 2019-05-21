@@ -160,6 +160,10 @@ void GameEngine::loadPlaceTile(int x, int y, Tile* tile) {
   board[y][x] = tile;
 }
 
+int GameEngine::getNumPlayers() {
+  return numPlayers;
+}
+
 void GameEngine::addPlayer(std::string name)
 {
   playerArray.push_back(new Player(name));
@@ -222,7 +226,10 @@ bool GameEngine::replaceTile(int index)
     Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
     currentPlayer->getHandPtr()->deleteAt(index);
     tileBag.addBack(tileObj);
+    // NOT DRAWING PROPERLY
     currentPlayer->drawTile(tileBag.getTileAt(0));
+    tileBag.deleteFront();
+
     return true;
 }
 
@@ -301,7 +308,6 @@ void GameEngine::mainLoop()
       currentPlayer->printTiles();
       aiMove();
     }
-
   }
 }
 
@@ -1042,3 +1048,6 @@ void GameEngine::aiMove(){
     }
     alternateTurns();
 }
+
+
+            // valgrind --track-origin=yes

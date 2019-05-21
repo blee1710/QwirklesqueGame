@@ -45,6 +45,7 @@ public:
 
   void help();
   bool checkDuplicate(Tile *tile, int letter, int number);
+  bool checkPriorDuplicate(int letter, int number);
   bool oneTileCheck(Tile *tile, int letter, int number, int direction);
   bool manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction);
   void setLN(int &l, int &n, int direction);

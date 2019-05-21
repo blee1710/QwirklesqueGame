@@ -166,10 +166,15 @@ void newSinglePlayerGame(){
   std::string playerName;
   std::cout << "Starting a New Game\n"<< std::endl;
 
-  std::cout << "Enter a name for player 1 (uppercase characters only)" << '\n';
-  std::cin >> playerName;
-  ge->addPlayer(playerName);
+  bool valid = false;
+  while(!valid){
+    std::cout << "Enter a name for player 1 (uppercase characters only)" << '\n';
+    std::cin >> playerName;
+    std::cin.ignore(256, '\n');
+    valid = isNameUpper(playerName);
+  }
 
+  ge->addPlayer(playerName);
   //Add random tiles to tileBag with Danny's random tile generation method.
   ge->makeBag();
   //Draw 6 tiles into each player's hands

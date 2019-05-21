@@ -315,6 +315,23 @@ void GameEngine::mainLoop()
       aiMove();
     }
   }
+
+  //ending sequence
+  std::cout << "Game Over" << std::endl;
+  int highestScore = 0;
+  std::string winner;
+  for(Player* player:playerArray){
+    int endScore = player->getScore();
+    if(endScore > highestScore){
+      highestScore = endScore;
+      winner = player->getName();
+    }
+    std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
+  }
+
+  std::cout << "Player " << winner << "won!"  << '\n';
+  // quit function
+
 }
 
 void GameEngine::readInCommand()

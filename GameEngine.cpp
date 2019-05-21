@@ -886,10 +886,10 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
       retVal = false;
     }
   }
-  // if(checkPriorDuplicate(letter,number))
-  // {
-  //   retVal = false;
-  // }
+  if(checkPriorDuplicate(letter,number))
+  {
+    retVal = false;
+  }
   return retVal;
 }
 
@@ -946,10 +946,10 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
       }
     }
   }
-  // if (checkPriorDuplicate(letter, number))
-  // {
-  //   retVal = false;
-  // }
+  if (checkPriorDuplicate(letter, number))
+  {
+    retVal = false;
+  }
   return retVal;
 }
 
@@ -1024,36 +1024,38 @@ bool GameEngine::checkPriorDuplicate(int letter, int number)
   //If left AND right exists, or if up AND down exists
   if (leftCount > 0 && rightCount > 0)
   {
-    for (int left = 0; left < leftCount; left++)
+    for (int left = 1; left <= leftCount; left++)
     {
-      for (int right = 0; right < rightCount; right++)
+      for (int right = 1; right <= rightCount; right++)
       {
         std::string leftTile = board[letter][number - left]->toString2();
         std::string rightTile = board[letter][number + right]->toString2();
         //If any of the leftTiles are the same as any of the rightTiles
         if (leftTile == rightTile)
         {
-          std::cout << "Would cause duplicate in column " << numberToLetter(letter) << std::endl;
           //There is a row dupe
           noRowDupe = false;
+          left = leftCount + 1;
+          right = rightCount + 1;
         }
       }
     }
   }
   if (upCount > 0 && downCount > 0)
   {
-    for (int up = 0; up < upCount; up++)
+    for (int up = 1; up <= upCount; up++)
     {
-      for (int down = 0; down < downCount; down++)
+      for (int down = 1; down <= downCount; down++)
       {
         std::string upTile = board[letter - up][number]->toString2();
         std::string downTile = board[letter + down][number]->toString2();
         //If any of the upTiles are the same as any of the downTiles
         if (upTile == downTile)
         {
-          std::cout << "Would cause duplicate in column " << number << std::endl;
           //There is a column dupe
           noColDupe = false;
+          up = upCount + 1;
+          down = downCount + 1;
         }
       }
     }
@@ -1063,6 +1065,11 @@ bool GameEngine::checkPriorDuplicate(int letter, int number)
   {
     retVal = false;
   }
+  else
+  {
+    std::cout << "Placement would result in duplicates connecting" << std::endl;
+  }
+
   return retVal;
 }
 

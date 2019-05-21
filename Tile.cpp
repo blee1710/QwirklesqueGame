@@ -19,7 +19,7 @@ std::string Tile::toString()
     else if (colour == ORANGE) colourCode = "\033[91m";
     else if (colour == YELLOW) colourCode = "\033[33m";
     else if (colour == GREEN) colourCode = "\033[32m";
-    else if (colour == BLUE) colourCode = "\033[94m";
+    else if (colour == BLUE) colourCode = "\033[34m";
     else if (colour == PURPLE) colourCode = "\033[35m";
 
     std::string shapeCode = "";

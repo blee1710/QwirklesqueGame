@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#define EXIT_SUCCESS    0
+#define EXIT_SUCCESS            0
 
 #define REQUIRED_ARGS           1
 #define NO_OF_SKIPPED_LINES    32
@@ -48,7 +48,7 @@ void menu()
    std::cout << "Menu" << std::endl;
    std::cout << "----" << std::endl;
    std::cout << "1. New Game" << std::endl;
-   std::cout << "2. New Game (SinglePlayer) WIP" << std::endl;
+   std::cout << "2. New Game (Single Player)" << std::endl;
    std::cout << "3. Load Game" << std::endl;
    std::cout << "4. Display Highscores" << std::endl;
    std::cout << "5. Show student information" << std::endl;
@@ -121,7 +121,8 @@ void newGame()
    std::cout << "Starting a New Game\n"<< std::endl;
 
    while(!valid) {
-     std::cout << "Please enter amount of players (2-4)" << '\n';
+     std::cout << "Please enter amount of players (2-4)" << std::endl
+               << "> ";
      std::cin >> playerCount;
      playerAmount = std::stoi(playerCount);
      if(playerAmount > 0 && playerAmount <= 4){
@@ -133,7 +134,8 @@ void newGame()
    for(int i = 0; i < playerAmount; i++){
      valid = false;
      while(!valid){
-       std::cout << "Enter a name for player " + std::to_string(i+1) + " (uppercase characters only)" << '\n';
+       std::cout << "Enter a name for player " << std::to_string(i+1)
+                 << " (uppercase characters only)" << std::endl << "> ";
        std::cin >> playerName;
        std::cin.ignore(256, '\n');
        valid = isNameUpper(playerName);
@@ -168,7 +170,8 @@ void newSinglePlayerGame(){
 
   bool valid = false;
   while(!valid){
-    std::cout << "Enter a name for player 1 (uppercase characters only)" << '\n';
+    std::cout << "Enter a name for player 1 (uppercase characters only)"
+              << std::endl << "> ";
     std::cin >> playerName;
     std::cin.ignore(256, '\n');
     valid = isNameUpper(playerName);
@@ -181,15 +184,19 @@ void newSinglePlayerGame(){
   ge->drawInitialTiles();
   //Start with player 1 then keep Alternating between player's turns until game ends.
   ge->mainLoop();
+
+  ge->saveHighScores();
 }
 
 void loadGame()
 {
-   std::cout<<"Enter the filename to load a game"<<std::endl;
+   std::cout << "Enter the filename to load a game" << std::endl
+             << "> ";
    std::string filename;
    std::cin >> filename;
    ge->loadGame(filename);
    ge->mainLoop();
+   ge->saveHighScores();
 }
 
 void showStudentInfo()

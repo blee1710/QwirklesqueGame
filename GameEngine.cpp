@@ -27,6 +27,7 @@ void GameEngine::saveGame(std::string filename)
   std::ofstream outFile;
   outFile.open(filename);
 
+  outFile << turn << std::endl;
   outFile << numPlayers << std::endl;
   for(unsigned int i = 0; i < playerArray.size(); i++) {
     if (playerArray[i]->getName() == "AI") {
@@ -76,6 +77,10 @@ void GameEngine::loadGame(std::string filename)
 {
   std::ifstream in;
   in.open(filename);
+
+  std::string numTurns;
+  std::getline(in, numTurns);
+  turn = stoi(numTurns);
 
   std::string noPlayersString;
   std::getline(in, noPlayersString);
@@ -158,6 +163,7 @@ void GameEngine::loadGame(std::string filename)
 // places tile when loading a game without checking the game rules
 void GameEngine::loadPlaceTile(int x, int y, Tile* tile) {
   board[y][x] = tile;
+  tilesPlaced++;
 }
 
 int GameEngine::getNumPlayers() {
@@ -986,7 +992,7 @@ void GameEngine::giveHint(){
   if(tilesPlaced == 0){
     std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
   }
-  else if(GameEngine::generateHints().empty(){
+  else if(GameEngine::generateHints().empty()) {
     std::cout << "You cannot place a tile. You need to replace a tile." << std::endl;
   }
   else{
@@ -1044,7 +1050,7 @@ void GameEngine::aiMove(){
       }
       std::cout << "The AI has placed " << tile << " at " << location << std::endl;
       placeTile(tile, location, index);
-      tilesPlaced++
+      tilesPlaced++;
     }
     alternateTurns();
 }

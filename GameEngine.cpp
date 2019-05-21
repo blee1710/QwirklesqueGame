@@ -10,12 +10,21 @@
 #define BOARD_SIZE 26
 #define NO_OF_EACH_TILE 2
 #define MAX_NO_OF_TILE 72
+#define LEFT 0
+#define UP 1
+#define RIGHT 2
+#define DOWN 3
+#define INITIAL_NUM_PLAYERS 0
+#define INITIAL_TURN_COUNT 0
+#define NULL_TILE 0
+#define LETTERS_IN_ALPHABET 26
+#define MAX_HAND_SIZE 6
 
 GameEngine::GameEngine()
 {
   clearBoardMemory();
-  numPlayers = 0;
-  turn = 0;
+  numPlayers = INITIAL_NUM_PLAYERS;
+  turn = INITIAL_TURN_COUNT;
 }
 
 GameEngine::~GameEngine()
@@ -55,7 +64,7 @@ void GameEngine::saveGame(std::string filename)
     outFile << letter << " |";
     for (int j = 0; j < BOARD_SIZE; j++)
     {
-      if (board[i][j] != 0)
+      if (board[i][j] != NULL_TILE)
       {
         outFile << board[i][j]->toString2() << "|";
       }
@@ -202,7 +211,7 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
   bool retVal;
 
   Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
-  if (turn == 0)
+  if (turn == INITIAL_TURN_COUNT)
   {
     currentPlayer->getHandPtr()->deleteAt(index);
     currentPlayer->drawTile(tileBag.getTileAt(0));
@@ -213,7 +222,7 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
   }
   else
   {
-    if (board[letter][number] != 0)
+    if (board[letter][number] != NULL_TILE)
     {
       std::cout << "There's already a tile there!" << std::endl;
       retVal = false;
@@ -255,14 +264,14 @@ bool GameEngine::replaceTile(int index)
 int GameEngine::letterToNumber(char letter)
 {
   int index = 0;
-  char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-  for (int i = 0; i < 26; i++)
+  char alphabet[LETTERS_IN_ALPHABET] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  for (int i = 0; i < LETTERS_IN_ALPHABET; i++)
   {
     if (letter == alphabet[i])
     {
       index = i;
       //Early termination
-      i = 26;
+      i = LETTERS_IN_ALPHABET;
     }
   }
   return index;
@@ -271,15 +280,8 @@ int GameEngine::letterToNumber(char letter)
 //Function for converting A to 0, B to 1 etc.
 char GameEngine::numberToLetter(int number)
 {
-  char alphabet[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  char alphabet[LETTERS_IN_ALPHABET] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
   return alphabet[number];
-}
-
-//Adds a tile to the tile bag(end of linked list)
-//Ideally can call this when generating initial tiles in tileBag and also when replacing.
-void GameEngine::addTile(Tile tile)
-{
-  //tilebag.addTile() etc
 }
 
 //All players populate their hands
@@ -292,7 +294,7 @@ void GameEngine::drawInitialTiles()
   }
   for (Player *p : playerArray)
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_HAND_SIZE; i++)
     {
       Tile *tile = tileBag.getTileAt(0);
       tileBag.deleteFront();
@@ -352,7 +354,7 @@ void GameEngine::alternateTurns()
 {
   if ((unsigned)currentTurn == playerArray.size() - 1)
   {
-    currentTurn = 0;
+    currentTurn = INITIAL_TURN_COUNT;
     turn++;
   }
   else
@@ -367,11 +369,11 @@ void GameEngine::alternateTurns()
 void GameEngine::clearBoardMemory()
 {
   //Makes sure there isn't any memory in array already (remove later)
-  for (int k = 0; k < 26; k++)
+  for (int row = 0; row < BOARD_SIZE; row++)
   {
-    for (int l = 0; l < 26; l++)
+    for (int col = 0; col < BOARD_SIZE; col++)
     {
-      board[k][l] = 0;
+      board[row][col] = NULL_TILE;
     }
   }
 }
@@ -382,13 +384,13 @@ void GameEngine::printBoard()
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
   //Print all 26 rows
 
-  for (int i = 0; i < 26; i++)
+  for (int i = 0; i < BOARD_SIZE; i++)
   {
     char letter = numberToLetter(i);
     std::cout << letter << " ";
-    for (int j = 0; j < 26; j++)
+    for (int j = 0; j < BOARD_SIZE; j++)
     {
-      if (board[i][j] != 0)
+      if (board[i][j] != NULL_TILE)
       {
         std::cout << "|" << board[i][j]->toString2();
       }
@@ -534,7 +536,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   if (number - 1 >= 0)
   {
     //If there is a tile to the left of where we are placing the tile
-    if (board[letter][number - 1] != 0)
+    if (board[letter][number - 1] != NULL_TILE)
     {
       leftExists = true;
     }
@@ -542,7 +544,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   //Check right
   if (number + 1 <= 25)
   {
-    if (board[letter][number + 1] != 0)
+    if (board[letter][number + 1] != NULL_TILE)
     {
       rightExists = true;
     }
@@ -550,7 +552,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   //Check down
   if (letter + 1 <= 25)
   {
-    if (board[letter + 1][number] != 0)
+    if (board[letter + 1][number] != NULL_TILE)
     {
       downExists = true;
     }
@@ -558,7 +560,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
   //Check up
   if (letter - 1 >= 0)
   {
-    if (board[letter - 1][number] != 0)
+    if (board[letter - 1][number] != NULL_TILE)
     {
       upExists = true;
     }
@@ -569,17 +571,17 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     if (leftExists)
     {
       //If theres less than 6 tiles in the row
-      tileCount = countTiles(letter, number, 0);
+      tileCount = countTiles(letter, number, LEFT);
       if (tileCount < 6)
       {
         //If there is only one tile, then a rule hasn't been defined yet for that row
         if (tileCount == 1)
         {
-          left = oneTileCheck(tile, letter, number, 0);
+          left = oneTileCheck(tile, letter, number, LEFT);
         }
         else
         {
-          left = manyTileCheck(tile, tileCount, letter, number, 0);
+          left = manyTileCheck(tile, tileCount, letter, number, LEFT);
         }
       }
       else
@@ -595,17 +597,17 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     if (rightExists)
     {
       //If theres less than 6 tiles in the row
-      tileCount = countTiles(letter, number, 2);
+      tileCount = countTiles(letter, number, RIGHT);
       if (tileCount < 6)
       {
         //If there is only one tile, then a rule hasn't been defined yet for that row
         if (tileCount == 1)
         {
-          right = oneTileCheck(tile, letter, number, 2);
+          right = oneTileCheck(tile, letter, number, RIGHT);
         }
         else
         {
-          right = manyTileCheck(tile, tileCount, letter, number, 2);
+          right = manyTileCheck(tile, tileCount, letter, number, RIGHT);
         }
       }
       else
@@ -621,17 +623,17 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     if (upExists)
     {
       //If theres less than 6 tiles in the row
-      tileCount = countTiles(letter, number, 1);
+      tileCount = countTiles(letter, number, UP);
       if (tileCount < 6)
       {
         //If there is only one tile, then a rule hasn't been defined yet for that row
         if (tileCount == 1)
         {
-          up = oneTileCheck(tile, letter, number, 1);
+          up = oneTileCheck(tile, letter, number, UP);
         }
         else
         {
-          up = manyTileCheck(tile, tileCount, letter, number, 1);
+          up = manyTileCheck(tile, tileCount, letter, number, UP);
         }
       }
       else
@@ -647,17 +649,17 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
     if (downExists)
     {
       //If theres less than 6 tiles in the row
-      tileCount = countTiles(letter, number, 3);
+      tileCount = countTiles(letter, number, DOWN);
       if (tileCount < 6)
       {
         //If there is only one tile, then a rule hasn't been defined yet for that row
         if (tileCount == 1)
         {
-          down = oneTileCheck(tile, letter, number, 3);
+          down = oneTileCheck(tile, letter, number, DOWN);
         }
         else
         {
-          down = manyTileCheck(tile, tileCount, letter, number, 3);
+          down = manyTileCheck(tile, tileCount, letter, number, DOWN);
         }
       }
       else
@@ -704,7 +706,7 @@ int GameEngine::countTiles(int letter, int number, int direction)
 
     if (vert >= 0 && hori >= 0)
     {
-      if (board[vert][hori] != 0)
+      if (board[vert][hori] != NULL_TILE)
       {
         numTiles++;
       }
@@ -807,7 +809,7 @@ int GameEngine::countPoints(int letter, int number)
 {
   //Count the tiles surrounding it
   int points = 0;
-  if (turn == 0)
+  if (turn == INITIAL_TURN_COUNT)
   {
     points++;
   }
@@ -953,19 +955,21 @@ bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number
   return retVal;
 }
 
+//A direction is passed in, and the corresponding horizontal and 
+//vertical translation is set in the method using l and n.
 void GameEngine::setLN(int &l, int &n, int direction)
 {
-  if (direction == 0)
+  if (direction == LEFT)
   {
     l = 0;
     n = -1;
   }
-  else if (direction == 1)
+  else if (direction == UP)
   {
     l = -1;
     n = 0;
   }
-  else if (direction == 2)
+  else if (direction == RIGHT)
   {
     l = 0;
     n = 1;
@@ -1083,7 +1087,7 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
     {
       for (int x = 0; x < BOARD_SIZE; x++)
       {
-        if (board[x][y] == 0)
+        if (board[x][y] == NULL_TILE)
         {
           if (checkSurround(currentPlayer->getHandPtr()->getTileAt(z), x, y))
           {

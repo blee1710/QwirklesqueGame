@@ -121,7 +121,7 @@ void GameEngine::loadGame(std::string filename)
     // 'k' value used for keeping track of the currnt column (x value) the
     // program is at. Current row (y value) is 'i'.
     int k = 0;
-    for (int j = 3; j < boardRow.length() - 1; j += 3) {
+    for (unsigned int j = 3; j < boardRow.length() - 1; j += 3) {
       if (boardRow.at(j) != ' ') {
         char colour = boardRow.at(j);
         int shape = stoi(boardRow.substr(j+1));
@@ -146,7 +146,7 @@ void GameEngine::loadGame(std::string filename)
   // Reading the current player from file
   std::string currentPlayerString;
   std::getline(in, currentPlayerString);
-  for (int i = 0; i < playerArray.size(); i++) {
+  for (unsigned int i = 0; i < playerArray.size(); i++) {
     if (currentPlayerString == playerArray[i]->getName()) {
       currentPlayer = playerArray[i];
       currentTurn = i;
@@ -977,14 +977,14 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints(){
 }
 
 void GameEngine::giveHint(){
-  std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
   if(tilesPlaced == 0){
     std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
   }
-  else if(hints.size() == 0){
+  else if(GameEngine::generateHints().empty(){
     std::cout << "You cannot place a tile. You need to replace a tile." << std::endl;
   }
   else{
+      std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
       std::random_device engine;
       std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
       int randomIndex = uniform_dist(engine);
@@ -995,18 +995,16 @@ void GameEngine::giveHint(){
 }
 
 void GameEngine::aiMove(){
-  std::cout << "seg fault1" << '\n';
-  bool placeAITile = true;
-  std::cout << "seg fault2" << '\n';
-  std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
-  std::cout << "seg fault pass" << '\n';
 
-  if(hints.empty()){
+  bool placeAITile = true;
+
+  if(GameEngine::generateHints().empty()){
     replaceTile(0);
     placeAITile = false;
   }
 
   if(placeAITile){
+      std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
       int largestScore = hints.at(0).score;
       std::vector<locationAndScore> maxHints;
       for (unsigned int i = 1 ; i < hints.size() ; i++){
@@ -1040,6 +1038,7 @@ void GameEngine::aiMove(){
       }
       std::cout << "The AI has placed " << tile << " at " << location << std::endl;
       placeTile(tile, location, index);
+      tilesPlaced++
     }
     alternateTurns();
 }

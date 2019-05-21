@@ -1,8 +1,14 @@
 #include "GameEngine.h"
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 #define EXIT_SUCCESS    0
+
+#define REQUIRED_ARGS           1
+#define NO_OF_SKIPPED_LINES    31
+#define NUM_PLAYER_LINES        3
 
 //Functions
 void menu();
@@ -12,20 +18,25 @@ void showStudentInfo();
 void newSinglePlayerGame();
 GameEngine* ge;
 
-int main(void)
+bool checkArgs(int argc, char** argv);
+bool checkFile(std::string &filename);
+void executeCommands(char** argv);
+
+int main(int argc, char** argv)
 {
-   // LinkedList* list = new LinkedList();
-   // delete list;
-
-
-   std::cout << "Welcome to Qwirkle" << std::endl;
-   std::cout << "------------------" << std::endl;
-
    ge = new GameEngine();
+   bool startUnitTest = false;
 
-   menu();
+   startUnitTest = checkArgs(argc, argv);
 
-
+   if (startUnitTest) {
+     executeCommands(argv);
+   }
+   else {
+     std::cout << "Welcome to Qwirkle" << std::endl;
+     std::cout << "------------------" << std::endl;
+     menu();
+   }
 
    return EXIT_SUCCESS;
 }
@@ -38,8 +49,9 @@ void menu()
    std::cout << "1. New Game" << std::endl;
    std::cout << "2. New Game (SinglePlayer) WIP" << std::endl;
    std::cout << "3. Load Game" << std::endl;
-   std::cout << "4. Show student information" << std::endl;
-   std::cout << "5. Quit" << std::endl;
+   std::cout << "4. Display Highscores" << std::endl;
+   std::cout << "5. Show student information" << std::endl;
+   std::cout << "6. Quit" << std::endl;
 
    std::cin >> command;
    std::cout<<std::endl;
@@ -56,6 +68,10 @@ void menu()
       loadGame();
    }
    else if (command == 4)
+   {
+     ge->printHighScores();
+   }
+   else if (command == 5)
    {
       showStudentInfo();
    }
@@ -133,6 +149,8 @@ void newGame()
    ge->drawInitialTiles();
    //Start with player 1 then keep Alternating between player's turns until game ends.
    ge->mainLoop();
+   // Saves highscore at the end of the GameEngine
+   ge->saveHighScores();
 }
 
 void newSinglePlayerGame(){
@@ -182,4 +200,56 @@ void showStudentInfo()
    menu();
 }
 
+bool checkArgs(int argc, char** argv) {
+  bool retVal = false;
+
+  if(argc == REQUIRED_ARGS + 1) {
+    std::string inputFilename = argv[1];
+    retVal = checkFile(inputFilename);
+  }
+  else if (argc > REQUIRED_ARGS + 1) {
+    std::cout << "Incorrect no. of file names provided" << std::endl;
+  }
+
+  return retVal;
+}
+
+bool checkFile(std::string &filename) {
+  bool validFile = true;
+
+  std::ifstream in;
+  in.open(filename);
+  if (in.fail()) {
+    validFile = false;
+    std::cout << "Could not open " << filename << std::endl;
+  }
+  in.close();
+
+  return validFile;
+}
+
+void executeCommands(char** argv) {
+  std::string filename = argv[1];
+  std::ifstream in;
+  in.open(filename);
+
+  ge->loadGame(filename);
+
+  std::string command;
+  int numPlayerLines = NUM_PLAYER_LINES * ge->getNumPlayers();
+  for (int i = 0; i < NO_OF_SKIPPED_LINES + numPlayerLines; i++) {
+    std::getline(in, command);
+  }
+
+  std::cout << "INITIAL BOARD STATE" << std::endl;
+  ge->printBoard();
+
+  while(std::getline(in, command)) {
+    ge->executeCommand(command);
+    std::cout << command << std::endl;
+    ge->printBoard();
+
+  }
+  in.close();
+}
 //

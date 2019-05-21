@@ -121,7 +121,7 @@ void GameEngine::loadGame(std::string filename)
     // 'k' value used for keeping track of the currnt column (x value) the
     // program is at. Current row (y value) is 'i'.
     int k = 0;
-    for (int j = 3; j < boardRow.length() - 1; j += 3) {
+    for (unsigned int j = 3; j < boardRow.length() - 1; j += 3) {
       if (boardRow.at(j) != ' ') {
         char colour = boardRow.at(j);
         int shape = stoi(boardRow.substr(j+1));
@@ -146,7 +146,7 @@ void GameEngine::loadGame(std::string filename)
   // Reading the current player from file
   std::string currentPlayerString;
   std::getline(in, currentPlayerString);
-  for (int i = 0; i < playerArray.size(); i++) {
+  for (unsigned int i = 0; i < playerArray.size(); i++) {
     if (currentPlayerString == playerArray[i]->getName()) {
       currentPlayer = playerArray[i];
       currentTurn = i;
@@ -158,6 +158,10 @@ void GameEngine::loadGame(std::string filename)
 // places tile when loading a game without checking the game rules
 void GameEngine::loadPlaceTile(int x, int y, Tile* tile) {
   board[y][x] = tile;
+}
+
+int GameEngine::getNumPlayers() {
+  return numPlayers;
 }
 
 void GameEngine::addPlayer(std::string name)
@@ -301,7 +305,6 @@ void GameEngine::mainLoop()
       currentPlayer->printTiles();
       aiMove();
     }
-
   }
 }
 
@@ -1030,3 +1033,6 @@ void GameEngine::aiMove(){
     }
     alternateTurns();
 }
+
+
+            // valgrind --track-origin=yes

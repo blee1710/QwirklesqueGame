@@ -156,37 +156,6 @@ Tile* LinkedList::getTileAt(int index)
 }
 
 
-//Swaps nodes at index x and y
-void LinkedList::swap(int x, int y){
-
-    Node* nodeX = getNodeAt(x);
-    Node* nodeY = getNodeAt(y);
-
-    if(nodeX->prev) {
-      nodeX->prev->next = nodeY;
-    }
-    if(nodeY->prev)  {
-      nodeY->prev->next = nodeX;
-    }
-    if(nodeX->next) {
-      nodeX->next->prev= nodeY;
-    }
-    if(nodeY->next) {
-      nodeY->next->prev= nodeX;
-    }
-
-    Node* temp;
-
-    temp = nodeX->prev;
-    nodeX->prev = nodeY->prev;
-    nodeY->prev = temp;
-    temp = nodeX->next;
-    nodeX->next= nodeY->next;
-    nodeY->next= temp;
-
-}
-
-
 void LinkedList::clear(){
   while(this->head != nullptr){
     Node* toDelete = this-> head;

@@ -14,7 +14,6 @@ public:
    void deleteBack();
    void clear();
    void deleteAt(int pos);
-   void swap(int x, int y);
    //Getters
    int getSize();
    Tile* getTileAt(int index);

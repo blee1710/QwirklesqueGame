@@ -42,8 +42,6 @@ GameEngine::~GameEngine()
   for (unsigned int i = 0; i < playerArray.size(); i++) {
     delete playerArray[i];
   }
-
-  delete tileBag;
 }
 
 void GameEngine::saveGame(std::string filename)

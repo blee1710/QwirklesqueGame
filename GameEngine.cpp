@@ -7,25 +7,15 @@
 #include <map>
 #include <sstream>
 
-#define BOARD_SIZE 26
-#define NO_OF_EACH_TILE 2
-#define MAX_NO_OF_TILE 72
-#define LEFT 0
-#define UP 1
-#define RIGHT 2
-#define DOWN 3
-#define INITIAL_NUM_PLAYERS 0
-#define INITIAL_TURN_COUNT 0
-#define NULL_TILE 0
-#define MAX_HAND_SIZE 6
-
 GameEngine::GameEngine()
 {
   numPlayers = INITIAL_NUM_PLAYERS;
   turn = INITIAL_TURN_COUNT;
 
-  for (int row = 0; row < BOARD_SIZE; row++) {
-    for (int col = 0; col < BOARD_SIZE; col++) {
+  for (int row = 0; row < BOARD_SIZE; row++)
+  {
+    for (int col = 0; col < BOARD_SIZE; col++)
+    {
       board[row][col] = nullptr;
     }
   }
@@ -33,13 +23,16 @@ GameEngine::GameEngine()
 
 GameEngine::~GameEngine()
 {
-  for (int row = 0; row < BOARD_SIZE; row++) {
-    for (int col = 0; col < BOARD_SIZE; col++)  {
+  for (int row = 0; row < BOARD_SIZE; row++)
+  {
+    for (int col = 0; col < BOARD_SIZE; col++)
+    {
       delete board[row][col];
     }
   }
 
-  for (unsigned int i = 0; i < playerArray.size(); i++) {
+  for (unsigned int i = 0; i < playerArray.size(); i++)
+  {
     delete playerArray[i];
   }
 }
@@ -347,18 +340,22 @@ void GameEngine::mainLoop()
       highestScore = endScore;
       winner = player->getName();
     }
-    else if (endScore == highestScore){
+    else if (endScore == highestScore)
+    {
       draw = true;
       winner += player->getName() + ' ';
     }
     std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
   }
 
-  if(draw){
-       std::cout << "Players " << winner << "drew!" << '\n';
-  } else {
-   std::cout << "Player " << winner << "won!" << '\n';
- }
+  if (draw)
+  {
+    std::cout << "Players " << winner << "drew!" << '\n';
+  }
+  else
+  {
+    std::cout << "Player " << winner << "won!" << '\n';
+  }
 }
 
 void GameEngine::readInCommand()
@@ -372,7 +369,8 @@ void GameEngine::readInCommand()
     std::getline(std::cin, action);
   }
 
-  if (!executeCommand(action)) {
+  if (!executeCommand(action))
+  {
     readInCommand();
   }
 }
@@ -541,14 +539,23 @@ bool GameEngine::executeCommand(std::string action)
 //Checks if there are tiles surrounding it
 bool GameEngine::checkSurround(Tile *tile, int letter, int number)
 {
+  //Check if each direction is "valid".
   bool left = false;
   bool up = false;
   bool right = false;
   bool down = false;
+  //Boolean to see whether or not a piece exists in that direction.
   bool leftExists = false;
   bool upExists = false;
   bool rightExists = false;
   bool downExists = false;
+  //Boolean to check for the case where directional opposites both pass onetileCheck.
+  //Need to ensure the same rules is applied in the entire column/row.
+  bool leftOne = false;
+  bool rightOne = false;
+  bool downOne = false;
+  bool upOne = false;
+
   bool retVal;
   int tileCount = 1;
 
@@ -598,6 +605,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           left = oneTileCheck(tile, letter, number, LEFT);
+          leftOne = true;
         }
         else
         {
@@ -624,6 +632,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           right = oneTileCheck(tile, letter, number, RIGHT);
+          rightOne = true;
         }
         else
         {
@@ -650,6 +659,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           up = oneTileCheck(tile, letter, number, UP);
+          upOne = true;
         }
         else
         {
@@ -676,6 +686,7 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           down = oneTileCheck(tile, letter, number, DOWN);
+          downOne = true;
         }
         else
         {
@@ -701,7 +712,18 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
 
   if (left && up && right && down)
   {
-    retVal = true;
+    if (leftOne && rightOne)
+    {
+      retVal = checkTiles(tile, letter, number, LEFT);
+    }
+    else if (downOne && upOne)
+    {
+      retVal = checkTiles(tile, letter, number, UP);
+    }
+    else
+    {
+      retVal = true;
+    }
   }
   else
   {
@@ -738,6 +760,49 @@ int GameEngine::countTiles(int letter, int number, int direction)
     }
   }
   return numTiles;
+}
+
+//Checks 3 tiles to see if they have matching rules. Returns true if passes test.
+bool GameEngine::checkTiles(Tile *tile, int letter, int number, int axis)
+{
+  int l;
+  int n;
+  bool retVal;
+  //Let axis 0 be horizontal
+  setLN(l, n, axis);
+  Tile *tile1 = tile;
+  Tile *tile2 = board[letter + l][number + n];
+  Tile *tile3 = board[letter - l][number - n];
+
+  //Colour matches between all three
+  if (tile1->getColour() == tile2->getColour())
+  {
+    if (tile3->getColour() == tile1->getColour())
+    {
+      retVal = true;
+    }
+    else
+    {
+      retVal = false;
+    }
+  }
+  //Shape matches between all three
+  else if (tile1->getShape() == tile2->getShape())
+  {
+    if (tile3->getShape() == tile1->getShape())
+    {
+      retVal = true;
+    }
+    else
+    {
+      retVal = false;
+    }
+  }
+  else
+  {
+    retVal = false;
+  }
+  return retVal;
 }
 
 // HIGHSCORE FUNCTIONALITY
@@ -909,7 +974,7 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
       retVal = false;
     }
   }
-  if(checkPriorDuplicate(letter,number))
+  if (checkPriorDuplicate(letter, number))
   {
     retVal = false;
   }
@@ -1099,31 +1164,31 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
   std::vector<GameEngine::location> possiblePlacement;
   std::cout.setstate(std::ios_base::failbit);
 
-    for (int j = 0; j < BOARD_SIZE; j++)
+  for (int j = 0; j < BOARD_SIZE; j++)
+  {
+    for (int i = 0; i < BOARD_SIZE; i++)
     {
-      for (int i = 0; i < BOARD_SIZE; i++)
+      if (board[i][j] == NULL_TILE)
       {
-        if (board[i][j] == NULL_TILE)
+        if (checkAroundLocation(i, j))
         {
-          if (checkAroundLocation(i, j))
-          {
-              struct location newLocation = {i,j};
-              possiblePlacement.push_back(newLocation);
-          }
+          struct location newLocation = {i, j};
+          possiblePlacement.push_back(newLocation);
         }
       }
     }
-    for (int x = 0; x < currentPlayer->getHandPtr()->getSize(); x++)
+  }
+  for (int x = 0; x < currentPlayer->getHandPtr()->getSize(); x++)
+  {
+    for (unsigned int y = 0; y < possiblePlacement.size(); y++)
     {
-      for(unsigned int y = 0; y < possiblePlacement.size(); y++)
+      if (checkSurround(currentPlayer->getHandPtr()->getTileAt(x), possiblePlacement.at(y).letter, possiblePlacement.at(y).number))
       {
-        if (checkSurround(currentPlayer->getHandPtr()->getTileAt(x), possiblePlacement.at(y).letter, possiblePlacement.at(y).number))
-        {
-          struct locationAndScore newHint = {possiblePlacement.at(y).letter, possiblePlacement.at(y).number, countPoints(possiblePlacement.at(y).letter, possiblePlacement.at(y).number), currentPlayer->getHandPtr()->getTileAt(x)};
-          hints.push_back(newHint);
-        }
+        struct locationAndScore newHint = {possiblePlacement.at(y).letter, possiblePlacement.at(y).number, countPoints(possiblePlacement.at(y).letter, possiblePlacement.at(y).number), currentPlayer->getHandPtr()->getTileAt(x)};
+        hints.push_back(newHint);
       }
     }
+  }
   std::cout.clear();
   return hints;
 }
@@ -1151,10 +1216,12 @@ void GameEngine::giveHint()
   }
 }
 
-bool GameEngine::gameEndCheck() {
+bool GameEngine::gameEndCheck()
+{
   bool end = false;
   // checks tile and hand count
-  if(tileBag.getSize() == 0 && currentPlayer -> getHand().getSize() == 0){
+  if (tileBag.getSize() == 0 && currentPlayer->getHand().getSize() == 0)
+  {
     end = true;
   }
   return end;
@@ -1227,43 +1294,43 @@ bool GameEngine::checkAroundLocation(int letter, int number)
   bool downExists = false;
   bool retVal = false;
 
-    //Check left
-    if (number - 1 >= 0)
+  //Check left
+  if (number - 1 >= 0)
+  {
+    //If there is a tile to the left of where we are placing the tile
+    if (board[letter][number - 1] != NULL_TILE)
     {
-      //If there is a tile to the left of where we are placing the tile
-      if (board[letter][number - 1] != NULL_TILE)
-      {
-        leftExists = true;
-      }
+      leftExists = true;
     }
-    //Check right
-    if (number + 1 <= 25)
-    {
-      if (board[letter][number + 1] != NULL_TILE)
-      {
-        rightExists = true;
-      }
-    }
-    //Check down
-    if (letter + 1 <= 25)
-    {
-      if (board[letter + 1][number] != NULL_TILE)
-      {
-        downExists = true;
-      }
-    }
-    //Check up
-    if (letter - 1 >= 0)
-    {
-      if (board[letter - 1][number] != NULL_TILE)
-      {
-        upExists = true;
-      }
-    }
-
-    if (rightExists || leftExists || upExists || downExists)
-    {
-      retVal = true;
-    }
-    return retVal;
   }
+  //Check right
+  if (number + 1 <= 25)
+  {
+    if (board[letter][number + 1] != NULL_TILE)
+    {
+      rightExists = true;
+    }
+  }
+  //Check down
+  if (letter + 1 <= 25)
+  {
+    if (board[letter + 1][number] != NULL_TILE)
+    {
+      downExists = true;
+    }
+  }
+  //Check up
+  if (letter - 1 >= 0)
+  {
+    if (board[letter - 1][number] != NULL_TILE)
+    {
+      upExists = true;
+    }
+  }
+
+  if (rightExists || leftExists || upExists || downExists)
+  {
+    retVal = true;
+  }
+  return retVal;
+}

@@ -9,6 +9,18 @@
 #include "Tile.h"
 #include "TileCodes.h"
 
+#define BOARD_SIZE 26
+#define NO_OF_EACH_TILE 2
+#define MAX_NO_OF_TILE 72
+#define LEFT 0
+#define UP 1
+#define RIGHT 2
+#define DOWN 3
+#define INITIAL_NUM_PLAYERS 0
+#define INITIAL_TURN_COUNT 0
+#define NULL_TILE 0
+#define MAX_HAND_SIZE 6
+
 class GameEngine
 {
 public:
@@ -38,6 +50,7 @@ public:
   bool checkSurround(Tile *tile, int letter, int number);
   bool checkAroundLocation(int letter, int number);
   int countTiles(int letter, int number, int direction);
+  bool checkTiles(Tile* tile, int letter, int number, int axis);
   void readInCommand();
   int countPoints(int letter, int number);
   bool replaceTile(int index);

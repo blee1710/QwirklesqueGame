@@ -96,7 +96,8 @@ void GameEngine::loadGame(std::string filename)
   std::ifstream in;
   in.open(filename);
 
-  std::string numTurns;
+
+std::string numTurns;
   std::getline(in, numTurns);
   turn = stoi(numTurns);
 
@@ -542,6 +543,10 @@ bool GameEngine::executeCommand(std::string action)
   {
     std::string filename = action.substr(5);
     saveGame(filename);
+  }
+  else if (action.substr(0, 4)) == "quit"){
+    std::cout << "Goodbye!" << '\n';
+    exit(0);
   }
   else
   {

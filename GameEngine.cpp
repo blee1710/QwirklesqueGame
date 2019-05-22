@@ -418,6 +418,9 @@ void GameEngine::printBoard()
   }
 }
 
+//Creates a linked list of tiles, populates the list with all the tiles of a qwirkle game
+//and then randomly moves the tiles to the back of the list but ensuring that every tile
+//is moved and moved to the back only once
 void GameEngine::makeBag()
 {
   std::default_random_engine engine(1);
@@ -855,6 +858,7 @@ int GameEngine::countPoints(int letter, int number)
   return points;
 }
 
+//Help Function prints the the possible commands that can be called by the user on the Qwirkle game
 void GameEngine::help()
 {
   std::cout << "Qwirkle Game version 1.0- release Help Guide\n"
@@ -1010,7 +1014,7 @@ bool GameEngine::checkDuplicate(Tile *tile, int letter, int number)
               << numberToLetter(letter) << number << std::endl;
     duplicate = true;
   }
-  
+
   return duplicate;
 }
 
@@ -1086,6 +1090,7 @@ bool GameEngine::checkPriorDuplicate(int letter, int number)
   return retVal;
 }
 
+//Generates the hints (Posible tile placement) and returns it as a vector of locationAndScore structs
 std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
 {
   std::vector<GameEngine::locationAndScore> hints;
@@ -1111,6 +1116,8 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
   return hints;
 }
 
+//Generates and Prints out a signle hint to the current player at to where they could place one of their tiles
+//if there are no legal tile placements the hint function advise the player to replace a tile
 void GameEngine::giveHint()
 {
   if (tilesPlaced == 0)
@@ -1128,10 +1135,13 @@ void GameEngine::giveHint()
     std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
     int randomIndex = uniform_dist(engine);
     std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
-              << " at " << numberToLetter(hints.at(randomIndex).l) << hints.at(randomIndex).n << " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
+              << " at " << numberToLetter(hints.at(randomIndex).letter) << hints.at(randomIndex).number << " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
   }
 }
 
+//Contains the logic of moving an AI by generating hints (possible) tiles placements, reducing that to placements
+//that generate the most score and randomly choosing the placement from that list and then executing the commands
+//to place otherwise if no hints are generate the AI replaces its first tile in its hand.
 void GameEngine::aiMove()
 {
 
@@ -1167,7 +1177,7 @@ void GameEngine::aiMove()
     std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
     int randomIndex = uniform_dist(engine);
 
-    std::string location = numberToLetter(maxHints.at(randomIndex).l) + std::to_string(maxHints.at(randomIndex).n);
+    std::string location = numberToLetter(maxHints.at(randomIndex).letter) + std::to_string(maxHints.at(randomIndex).number);
     std::string tile = maxHints.at(randomIndex).tile->toString2();
     //If tile is in hand, call place Tile
     int index = 0;

@@ -58,8 +58,8 @@ public:
   void printHighScores();
 
   struct locationAndScore {
-      int l;
-      int n;
+      int letter;
+      int number;
       int score;
       Tile* tile;
   };

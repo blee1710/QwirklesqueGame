@@ -1094,24 +1094,34 @@ bool GameEngine::checkPriorDuplicate(int letter, int number)
 std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
 {
   std::vector<GameEngine::locationAndScore> hints;
+  std::vector<GameEngine::location> possiblePlacement;
   std::cout.setstate(std::ios_base::failbit);
-  for (int z = 0; z < currentPlayer->getHandPtr()->getSize(); z++)
-  {
-    for (int y = 0; y < BOARD_SIZE; y++)
+
+    for (int j = 0; j < BOARD_SIZE; j++)
     {
-      for (int x = 0; x < BOARD_SIZE; x++)
+      for (int i = 0; i < BOARD_SIZE; i++)
       {
-        if (board[x][y] == NULL_TILE)
+        if (board[i][j] == NULL_TILE)
         {
-          if (checkSurround(currentPlayer->getHandPtr()->getTileAt(z), x, y))
+          if (checkSurround2(i, j))
           {
-            struct locationAndScore newHint = {x, y, countPoints(x, y), currentPlayer->getHandPtr()->getTileAt(z)};
-            hints.push_back(newHint);
+              struct location newLocation = {i,j};
+              possiblePlacement.push_back(newLocation);
           }
         }
       }
     }
-  }
+    for (int x = 0; x < currentPlayer->getHandPtr()->getSize(); x++)
+    {
+      for(unsigned int y = 0; y < possiblePlacement.size(); y++)
+      {
+        if (checkSurround(currentPlayer->getHandPtr()->getTileAt(x), possiblePlacement.at(y).letter, possiblePlacement.at(y).number))
+        {
+          struct locationAndScore newHint = {possiblePlacement.at(y).letter, possiblePlacement.at(y).number, countPoints(possiblePlacement.at(y).letter, possiblePlacement.at(y).number), currentPlayer->getHandPtr()->getTileAt(x)};
+          hints.push_back(newHint);
+        }
+      }
+    }
   std::cout.clear();
   return hints;
 }
@@ -1197,3 +1207,52 @@ void GameEngine::aiMove()
   }
   alternateTurns();
 }
+
+bool GameEngine::checkSurround2(int letter, int number)
+{
+  bool leftExists = false;
+  bool upExists = false;
+  bool rightExists = false;
+  bool downExists = false;
+  bool retVal = false;
+
+    //Check left
+    if (number - 1 >= 0)
+    {
+      //If there is a tile to the left of where we are placing the tile
+      if (board[letter][number - 1] != NULL_TILE)
+      {
+        leftExists = true;
+      }
+    }
+    //Check right
+    if (number + 1 <= 25)
+    {
+      if (board[letter][number + 1] != NULL_TILE)
+      {
+        rightExists = true;
+      }
+    }
+    //Check down
+    if (letter + 1 <= 25)
+    {
+      if (board[letter + 1][number] != NULL_TILE)
+      {
+        downExists = true;
+      }
+    }
+    //Check up
+    if (letter - 1 >= 0)
+    {
+      if (board[letter - 1][number] != NULL_TILE)
+      {
+        upExists = true;
+      }
+    }
+
+    if (rightExists || leftExists || upExists || downExists)
+    {
+      retVal = true;
+    }
+    return retVal;
+  }

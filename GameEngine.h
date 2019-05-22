@@ -37,7 +37,7 @@ public:
   void clearBoardMemory();
   bool executeCommand(std::string action);
   bool checkSurround(Tile *tile, int letter, int number);
-
+  bool checkSurround2(int letter, int number);
   int countTiles(int letter, int number, int direction);
   void readInCommand();
   int countPoints(int letter, int number);
@@ -57,6 +57,10 @@ public:
   void saveHighScores();
   void printHighScores();
 
+  struct location {
+      int letter;
+      int number;
+  };
   struct locationAndScore {
       int letter;
       int number;

@@ -8,7 +8,6 @@ class Node {
 public:
 
    Node(Tile* tile, Node* next, Node* prev);
-   ~Node();
    Node(Node& other);
 
    Tile*    tile;

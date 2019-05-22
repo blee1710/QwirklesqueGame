@@ -1220,9 +1220,14 @@ bool GameEngine::gameEndCheck()
 {
   bool end = false;
   // checks tile and hand count
-  if (tileBag.getSize() == 0 && currentPlayer->getHand().getSize() == 0)
+  if (tileBag.getSize() == 0)
   {
     end = true;
+  }
+  for(Player *p:playerArray){
+    if(p->getHandPtr()->getSize() == 0){
+      end = true;
+    }
   }
   return end;
 }

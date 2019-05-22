@@ -81,6 +81,7 @@ void menu()
    else
    {
       std::cout<<"Goodbye!"<<std::endl;
+      quit();
    }
    // do
    // {
@@ -163,6 +164,7 @@ void newGame()
    //Start with player 1 then keep Alternating between player's turns until game ends.
    ge->mainLoop();
    ge->saveHighScores();
+   quit();
    //ending sequence
    // quit function
 

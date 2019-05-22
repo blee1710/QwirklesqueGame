@@ -192,6 +192,8 @@ void newSinglePlayerGame(){
   ge->mainLoop();
 
   ge->saveHighScores();
+
+  quit();
 }
 
 void loadGame()
@@ -297,6 +299,7 @@ bool isNameUpper(std::string name){
 }
 
 void quit(){
+  std::cout << "Goodbye!" << '\n';
   exit(0);
 }
 //

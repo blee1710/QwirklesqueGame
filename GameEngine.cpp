@@ -203,6 +203,7 @@ int GameEngine::getNumPlayers()
 void GameEngine::addPlayer(std::string name)
 {
   playerArray.push_back(new Player(name));
+  std::cout << "Player created" << std::endl;
   //playerArray[numPlayers] = new Player(name);
   numPlayers++;
 }
@@ -898,10 +899,7 @@ void GameEngine::saveHighScores()
   out.close();
 
   // Deallocating memory
-  for (unsigned int i = 0; i < players.size(); i++)
-  {
-    delete players[i];
-  }
+    players.clear();
 }
 
 //Pass in the position of the tile being placed

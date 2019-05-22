@@ -6,7 +6,6 @@
 Player::Player(std::string name)
 {
     //To check things, not needed
-    std::cout << "Player created" << std::endl;
     this->name = name;
     this->score = 0;
 }

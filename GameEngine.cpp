@@ -21,13 +21,27 @@
 
 GameEngine::GameEngine()
 {
-  clearBoardMemory();
   numPlayers = INITIAL_NUM_PLAYERS;
   turn = INITIAL_TURN_COUNT;
+
+  for (int row = 0; row < BOARD_SIZE; row++) {
+    for (int col = 0; col < BOARD_SIZE; col++) {
+      board[row][col] = nullptr;
+    }
+  }
 }
 
 GameEngine::~GameEngine()
 {
+  for (int row = 0; row < BOARD_SIZE; row++) {
+    for (int col = 0; col < BOARD_SIZE; col++)  {
+      delete board[row][col];
+    }
+  }
+
+  for (int i = 0; i < playerArray.size(); i++) {
+    delete playerArray[i];
+  }
 }
 
 void GameEngine::saveGame(std::string filename)
@@ -377,18 +391,6 @@ void GameEngine::alternateTurns()
   }
 
   currentPlayer = playerArray[currentTurn];
-}
-
-void GameEngine::clearBoardMemory()
-{
-  //Makes sure there isn't any memory in array already (remove later)
-  for (int row = 0; row < BOARD_SIZE; row++)
-  {
-    for (int col = 0; col < BOARD_SIZE; col++)
-    {
-      board[row][col] = NULL_TILE;
-    }
-  }
 }
 
 void GameEngine::printBoard()

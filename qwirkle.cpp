@@ -40,6 +40,7 @@ int main(int argc, char** argv)
      menu();
    }
 
+   delete ge;
    return EXIT_SUCCESS;
 }
 
@@ -276,8 +277,6 @@ void executeCommands(char** argv) {
       ge->aiMove();
     }
     ge->printBoard();
-
-
   }
   in.close();
 }

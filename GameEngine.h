@@ -34,7 +34,6 @@ public:
   //Other Functions
   int letterToNumber(char letter);
   char numberToLetter(int number);
-  void clearBoardMemory();
   bool executeCommand(std::string action);
   bool checkSurround(Tile *tile, int letter, int number);
   bool checkSurround2(int letter, int number);

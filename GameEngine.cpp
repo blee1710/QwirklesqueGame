@@ -39,7 +39,7 @@ GameEngine::~GameEngine()
     }
   }
 
-  for (int i = 0; i < playerArray.size(); i++) {
+  for (unsigned int i = 0; i < playerArray.size(); i++) {
     delete playerArray[i];
   }
 }
@@ -1105,7 +1105,7 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
       {
         if (board[i][j] == NULL_TILE)
         {
-          if (checkSurround2(i, j))
+          if (checkAroundLocation(i, j))
           {
               struct location newLocation = {i,j};
               possiblePlacement.push_back(newLocation);
@@ -1219,7 +1219,7 @@ void GameEngine::aiMove()
   alternateTurns();
 }
 
-bool GameEngine::checkSurround2(int letter, int number)
+bool GameEngine::checkAroundLocation(int letter, int number)
 {
   bool leftExists = false;
   bool upExists = false;

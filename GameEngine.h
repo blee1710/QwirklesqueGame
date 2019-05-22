@@ -36,7 +36,7 @@ public:
   char numberToLetter(int number);
   bool executeCommand(std::string action);
   bool checkSurround(Tile *tile, int letter, int number);
-  bool checkSurround2(int letter, int number);
+  bool checkAroundLocation(int letter, int number);
   int countTiles(int letter, int number, int direction);
   void readInCommand();
   int countPoints(int letter, int number);

@@ -718,7 +718,7 @@ int GameEngine::countTiles(int letter, int number, int direction)
   int l;
   int n;
   setLN(l, n, direction);
-  for (int i = 1; i < 6; i++)
+  for (int i = 1; i <= 6; i++)
   {
     //qwirle error
     int vert = letter + i * l;

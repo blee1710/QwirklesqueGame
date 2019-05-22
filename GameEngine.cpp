@@ -425,7 +425,7 @@ void GameEngine::printBoard()
     {
       if (board[i][j] != NULL_TILE)
       {
-        std::cout << "|" << board[i][j]->toString2();
+        std::cout << "|" << board[i][j]->toString();
       }
       else
       {
@@ -544,7 +544,7 @@ bool GameEngine::executeCommand(std::string action)
     std::string filename = action.substr(5);
     saveGame(filename);
   }
-  else if (action.substr(0, 4)) == "quit"){
+  else if (action.substr(0, 4) == "quit"){
     std::cout << "Goodbye!" << '\n';
     exit(0);
   }

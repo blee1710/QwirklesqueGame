@@ -159,10 +159,25 @@ void newSinglePlayerGame(){
 
 void loadGame()
 {
-   std::cout << "Enter the filename to load a game" << std::endl
-             << "> ";
-   std::string filename;
-   std::cin >> filename;
+  bool valid = false;
+  std::string filename;
+  
+  while(!valid){
+     std::cout << "Enter the filename to load a game" << std::endl
+               << "> ";
+     std::cin >> filename;
+     std::ifstream in;
+     in.open(filename);
+
+     if(in.fail()){
+       std::cout << "Please enter a correct load filename" << std::endl;
+     } else{
+       valid = true;
+     }
+     in.close();
+
+  }
+
    ge->loadGame(filename);
    ge->mainLoop();
    ge->saveHighScores();

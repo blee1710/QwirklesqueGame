@@ -220,8 +220,10 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
   if (turn == INITIAL_TURN_COUNT)
   {
     currentPlayer->getHandPtr()->deleteAt(index);
-    currentPlayer->drawTile(tileBag.getTileAt(0));
-    tileBag.deleteFront();
+    if(tileBag.getSize() > 0){
+      currentPlayer->drawTile(tileBag.getTileAt(0));
+      tileBag.deleteFront();
+    }
     board[letter][number] = tileObj;
     currentPlayer->addPoints(countPoints(letter, number));
     retVal = true;
@@ -238,8 +240,10 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
       if (checkSurround(tileObj, letter, number))
       {
         currentPlayer->getHandPtr()->deleteAt(index);
-        currentPlayer->drawTile(tileBag.getTileAt(0));
-        tileBag.deleteFront();
+        if(tileBag.getSize() > 0){
+          currentPlayer->drawTile(tileBag.getTileAt(0));
+          tileBag.deleteFront();
+        }
         board[letter][number] = tileObj;
         currentPlayer->addPoints(countPoints(letter, number));
         retVal = true;
@@ -256,14 +260,20 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
 
 bool GameEngine::replaceTile(int index)
 {
-  Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
-  currentPlayer->getHandPtr()->deleteAt(index);
-  tileBag.addBack(tileObj);
-  // NOT DRAWING PROPERLY
-  currentPlayer->drawTile(tileBag.getTileAt(0));
-  tileBag.deleteFront();
-
-  return true;
+  bool replaced = false;
+  if(tileBag.getSize() > 0){
+    Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
+    currentPlayer->getHandPtr()->deleteAt(index);
+    tileBag.addBack(tileObj);
+    // NOT DRAWING PROPERLY
+    currentPlayer->drawTile(tileBag.getTileAt(0));
+    tileBag.deleteFront();
+    replaced = true;
+  }
+  else{
+    std::cout << "No tiles in the bag to replace with" << std::endl;
+  }
+  return replaced;
 }
 
 //Function for converting A to 0, B to 1 etc.
@@ -302,6 +312,7 @@ void GameEngine::drawInitialTiles()
 //The main loop between player's turns.
 void GameEngine::mainLoop()
 {
+
   currentPlayer = &*playerArray[0];
   while (!gameEndCheck())
   {

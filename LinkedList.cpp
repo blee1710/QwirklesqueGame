@@ -9,7 +9,7 @@ tail(nullptr)
 }
 
 LinkedList::~LinkedList() {
-  //clear();
+  clear();
 }
 
 void LinkedList::addFront(Tile* tile) {
@@ -122,7 +122,20 @@ Node* LinkedList::getNode(Tile* tile) {
   return foundNode;
 }
 
-Tile *LinkedList::getTileAt(int index)
+Node* LinkedList::getNodeAt(int index){
+  Node* foundNode = nullptr;
+  Node* curr = head;
+  int i = 0;
+  while (i < index){
+    curr = curr->next;
+    i++;
+  }
+  foundNode = curr;
+  return foundNode;
+
+}
+
+Tile* LinkedList::getTileAt(int index)
 {
   int i = 0;
   Node *curr = head;
@@ -135,6 +148,38 @@ Tile *LinkedList::getTileAt(int index)
   tile = curr->getTile();
   return tile;
 }
+
+
+//Swaps nodes at index x and y
+void LinkedList::swap(int x, int y){
+
+    Node* nodeX = getNodeAt(x);
+    Node* nodeY = getNodeAt(y);
+
+    if(nodeX->prev) {
+      nodeX->prev->next = nodeY;
+    }
+    if(nodeY->prev)  {
+      nodeY->prev->next = nodeX;
+    }
+    if(nodeX->next) {
+      nodeX->next->prev= nodeY;
+    }
+    if(nodeY->next) {
+      nodeY->next->prev= nodeX;
+    }
+
+    Node* temp;
+
+    temp = nodeX->prev;
+    nodeX->prev = nodeY->prev;
+    nodeY->prev = temp;
+    temp = nodeX->next;
+    nodeX->next= nodeY->next;
+    nodeY->next= temp;
+
+}
+
 
 void LinkedList::clear(){
   while(this->head != nullptr){

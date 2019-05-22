@@ -440,7 +440,7 @@ void GameEngine::printBoard()
 //is moved and moved to the back only once
 void GameEngine::makeBag()
 {
-  std::default_random_engine engine(1);
+  std::random_device engine;
   std::map<int, char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN}, {4, BLUE}, {5, PURPLE}};
   std::map<int, int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE}, {4, STAR_6}, {5, CLOVER}};
   for (unsigned int x = 0; x < colourMap.size(); x++)
@@ -954,6 +954,8 @@ void GameEngine::help()
             << "Replaces the specified tile in the player's hand into the bag and the player draws one new tile from the bag.\n\n"
             << "save <filename>\n"
             << "Saves the current state of the game in an output file with the name the user specified.\n\n"
+            << "quit\n"
+            << "Quits the current game of Qwirkle.\n\n"
             << "Tile Syntax of Tile is Colours+Shapes (Tile codes defined below)\n"
             << "\033[31mRED 'R'\033[0m, \033[91mORANGE 'O'\033[0m, \033[33mYELLOW 'Y'\033[0m, \033[32mGREEN  'G'\033[0m, \033[34mBLUE   'B'\033[0m, \033[35mPURPLE 'P'\033[0m\n"
             << "CIRCLE (\U000025CB)  1, STAR_4 (\U00002B51)  2, DIAMOND (\U000025CA)  3, SQUARE (\U000025A1)  4, STAR_6 (\U00002734)  5, CLOVER (\U00002663)  6\n";

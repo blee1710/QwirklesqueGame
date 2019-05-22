@@ -220,7 +220,8 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
   if (turn == INITIAL_TURN_COUNT)
   {
     currentPlayer->getHandPtr()->deleteAt(index);
-    if(tileBag.getSize() > 0){
+    if (tileBag.getSize() > 0)
+    {
       currentPlayer->drawTile(tileBag.getTileAt(0));
       tileBag.deleteFront();
     }
@@ -240,7 +241,8 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
       if (checkSurround(tileObj, letter, number))
       {
         currentPlayer->getHandPtr()->deleteAt(index);
-        if(tileBag.getSize() > 0){
+        if (tileBag.getSize() > 0)
+        {
           currentPlayer->drawTile(tileBag.getTileAt(0));
           tileBag.deleteFront();
         }
@@ -261,7 +263,8 @@ bool GameEngine::placeTile(std::string tile, std::string location, int index)
 bool GameEngine::replaceTile(int index)
 {
   bool replaced = false;
-  if(tileBag.getSize() > 0){
+  if (tileBag.getSize() > 0)
+  {
     Tile *tileObj = currentPlayer->getHandPtr()->getTileAt(index);
     currentPlayer->getHandPtr()->deleteAt(index);
     tileBag.addBack(tileObj);
@@ -270,7 +273,8 @@ bool GameEngine::replaceTile(int index)
     tileBag.deleteFront();
     replaced = true;
   }
-  else{
+  else
+  {
     std::cout << "No tiles in the bag to replace with" << std::endl;
   }
   return replaced;
@@ -616,12 +620,12 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           left = oneTileCheck(tile, letter, number, LEFT);
-          leftOne = true;
         }
         else
         {
           left = manyTileCheck(tile, tileCount, letter, number, LEFT);
         }
+        leftOne = true;
       }
       else
       {
@@ -643,12 +647,12 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           right = oneTileCheck(tile, letter, number, RIGHT);
-          rightOne = true;
         }
         else
         {
           right = manyTileCheck(tile, tileCount, letter, number, RIGHT);
         }
+        rightOne = true;
       }
       else
       {
@@ -670,12 +674,12 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           up = oneTileCheck(tile, letter, number, UP);
-          upOne = true;
         }
         else
         {
           up = manyTileCheck(tile, tileCount, letter, number, UP);
         }
+        upOne = true;
       }
       else
       {
@@ -697,12 +701,12 @@ bool GameEngine::checkSurround(Tile *tile, int letter, int number)
         if (tileCount == 1)
         {
           down = oneTileCheck(tile, letter, number, DOWN);
-          downOne = true;
         }
         else
         {
           down = manyTileCheck(tile, tileCount, letter, number, DOWN);
         }
+        downOne = true;
       }
       else
       {
@@ -1231,8 +1235,10 @@ bool GameEngine::gameEndCheck()
 {
   bool end = false;
   // checks tile and hand count
-  for(Player *p:playerArray){
-    if(p->getHandPtr()->getSize() == 0 && tileBag.getSize() == 0){
+  for (Player *p : playerArray)
+  {
+    if (p->getHandPtr()->getSize() == 0 && tileBag.getSize() == 0)
+    {
       end = true;
     }
   }

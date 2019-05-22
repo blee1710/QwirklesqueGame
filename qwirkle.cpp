@@ -281,6 +281,10 @@ void executeCommands(char** argv) {
     ge->printBoard();
   }
   in.close();
+
+  if (ge->gameEndCheck()) {
+    ge->saveGame("savedGame");
+  }
 }
 
 bool isNameUpper(std::string name){

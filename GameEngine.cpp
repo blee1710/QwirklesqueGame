@@ -1185,6 +1185,7 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
   std::vector<GameEngine::location> possiblePlacement;
   std::cout.setstate(std::ios_base::failbit);
 
+  //Generate a vector of possible tile locations
   for (int j = 0; j < BOARD_SIZE; j++)
   {
     for (int i = 0; i < BOARD_SIZE; i++)
@@ -1199,6 +1200,8 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
       }
     }
   }
+
+  //Test placing a tile in all the locations listed above and pushes tiles that can be placed into anouther vector 
   for (int x = 0; x < currentPlayer->getHandPtr()->getSize(); x++)
   {
     for (unsigned int y = 0; y < possiblePlacement.size(); y++)
@@ -1228,6 +1231,7 @@ void GameEngine::giveHint()
   }
   else
   {
+    //Pick a random hint to show the player
     std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
     std::random_device engine;
     std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
@@ -1268,6 +1272,7 @@ void GameEngine::aiMove()
 
   if (placeAITile)
   {
+    //Fill max Hints with the highest scoring hints
     std::vector<GameEngine::locationAndScore> hints = GameEngine::generateHints();
     int largestScore = hints.at(0).score;
     std::vector<locationAndScore> maxHints;
@@ -1289,7 +1294,7 @@ void GameEngine::aiMove()
     std::random_device engine;
     std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
     int randomIndex = uniform_dist(engine);
-
+    //Pick a random hint to place the tile
     std::string location = numberToLetter(maxHints.at(randomIndex).letter) + std::to_string(maxHints.at(randomIndex).number);
     std::string tile = maxHints.at(randomIndex).tile->toString2();
     //If tile is in hand, call place Tile

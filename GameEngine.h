@@ -48,6 +48,7 @@ public:
   bool checkPriorDuplicate(int letter, int number);
   bool oneTileCheck(Tile *tile, int letter, int number, int direction);
   bool manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction);
+  bool gameEndCheck();
   void setLN(int &l, int &n, int direction);
   void giveHint();
   void aiMove();

@@ -16,6 +16,7 @@ void newGame();
 void loadGame();
 void showStudentInfo();
 void newSinglePlayerGame();
+void quit();
 GameEngine* ge;
 
 bool checkArgs(int argc, char** argv);
@@ -288,5 +289,9 @@ bool isNameUpper(std::string name){
     }
   }
   return true;
+}
+
+void quit(){
+  exit(0);
 }
 //

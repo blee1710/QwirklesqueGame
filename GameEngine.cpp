@@ -327,7 +327,8 @@ void GameEngine::mainLoop()
       std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
       for (int i = 0; i < numPlayers; i++)
       {
-        std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+        std::cout << "Score for " << playerArray[i]->getName() << ": "
+                  << playerArray[i]->getScore() << std::endl;
       }
       printBoard();
       currentPlayer->printTiles();
@@ -338,7 +339,8 @@ void GameEngine::mainLoop()
       std::cout << currentPlayer->getName() << ", it's your turn" << std::endl;
       for (int i = 0; i < numPlayers; i++)
       {
-        std::cout << "Score for " << playerArray[i]->getName() << ": " << playerArray[i]->getScore() << std::endl;
+        std::cout << "Score for " << playerArray[i]->getName() << ": "
+                  << playerArray[i]->getScore() << std::endl;
       }
       printBoard();
       currentPlayer->printTiles();
@@ -363,16 +365,17 @@ void GameEngine::mainLoop()
       draw = true;
       winner += player->getName() + ' ';
     }
-    std::cout << "Score for " << player->getName() << ": " << player->getScore() << std::endl;
+    std::cout << "Score for " << player->getName() << ": " << player->getScore()
+              << std::endl;
   }
 
   if (draw)
   {
-    std::cout << "Players " << winner << "drew!" << '\n';
+    std::cout << "Players " << winner << " drew!" << std::endl;
   }
   else
   {
-    std::cout << "Player " << winner << "won!" << '\n';
+    std::cout << "Player " << winner << " won!" << std::endl;
   }
 }
 
@@ -442,8 +445,10 @@ void GameEngine::printBoard()
 void GameEngine::makeBag()
 {
   std::random_device engine;
-  std::map<int, char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW}, {3, GREEN}, {4, BLUE}, {5, PURPLE}};
-  std::map<int, int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND}, {3, SQUARE}, {4, STAR_6}, {5, CLOVER}};
+  std::map<int, char> colourMap = {{0, RED}, {1, ORANGE}, {2, YELLOW},
+                                  {3, GREEN}, {4, BLUE}, {5, PURPLE}};
+  std::map<int, int> shapeMap = {{0, CIRCLE}, {1, STAR_4}, {2, DIAMOND},
+                                {3, SQUARE}, {4, STAR_6}, {5, CLOVER}};
   for (unsigned int x = 0; x < colourMap.size(); x++)
   {
     for (unsigned int y = 0; y < shapeMap.size(); y++)
@@ -545,7 +550,7 @@ bool GameEngine::executeCommand(std::string action)
     saveGame(filename);
   }
   else if (action.substr(0, 4) == "quit"){
-    std::cout << "Goodbye!" << '\n';
+    std::cout << "Goodbye!" << std::endl;
     exit(0);
   }
   else
@@ -991,7 +996,8 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
     }
     else
     {
-      std::cout << "Colour or shape must match " << board[letter + l][number + n]->toString2() << std::endl;
+      std::cout << "Colour or shape must match "
+                << board[letter + l][number + n]->toString2() << std::endl;
       retVal = false;
     }
   }
@@ -1002,7 +1008,8 @@ bool GameEngine::oneTileCheck(Tile *tile, int letter, int number, int direction)
   return retVal;
 }
 
-bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter, int number, int direction)
+bool GameEngine::manyTileCheck(Tile *tile, int tileCount, int letter,
+  int number, int direction)
 {
   bool duplicates = false;
   bool retVal = false;
@@ -1201,14 +1208,19 @@ std::vector<GameEngine::locationAndScore> GameEngine::generateHints()
     }
   }
 
-  //Test placing a tile in all the locations listed above and pushes tiles that can be placed into anouther vector 
+  //Test placing a tile in all the locations listed above and pushes tiles that can be placed into anouther vector
   for (int x = 0; x < currentPlayer->getHandPtr()->getSize(); x++)
   {
     for (unsigned int y = 0; y < possiblePlacement.size(); y++)
     {
-      if (checkSurround(currentPlayer->getHandPtr()->getTileAt(x), possiblePlacement.at(y).letter, possiblePlacement.at(y).number))
+      if (checkSurround(currentPlayer->getHandPtr()->getTileAt(x),
+        possiblePlacement.at(y).letter, possiblePlacement.at(y).number))
       {
-        struct locationAndScore newHint = {possiblePlacement.at(y).letter, possiblePlacement.at(y).number, countPoints(possiblePlacement.at(y).letter, possiblePlacement.at(y).number), currentPlayer->getHandPtr()->getTileAt(x)};
+        struct locationAndScore newHint = {possiblePlacement.at(y).letter,
+          possiblePlacement.at(y).number,
+          countPoints(possiblePlacement.at(y).letter,
+          possiblePlacement.at(y).number),
+          currentPlayer->getHandPtr()->getTileAt(x)};
         hints.push_back(newHint);
       }
     }
@@ -1223,11 +1235,13 @@ void GameEngine::giveHint()
 {
   if (tilesPlaced == 0)
   {
-    std::cout << "Board is empty so you can place your tile anywhere!" << std::endl;
+    std::cout << "Board is empty so you can place your tile anywhere!"
+              << std::endl;
   }
   else if (GameEngine::generateHints().empty())
   {
-    std::cout << "You cannot place a tile. You need to replace a tile." << std::endl;
+    std::cout << "You cannot place a tile. You need to replace a tile."
+              << std::endl;
   }
   else
   {
@@ -1236,8 +1250,11 @@ void GameEngine::giveHint()
     std::random_device engine;
     std::uniform_int_distribution<int> uniform_dist(0, hints.size() - 1);
     int randomIndex = uniform_dist(engine);
-    std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
-              << " at " << numberToLetter(hints.at(randomIndex).letter) << hints.at(randomIndex).number << " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
+    std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour()
+              << hints.at(randomIndex).tile->getShape()
+              << " at " << numberToLetter(hints.at(randomIndex).letter)
+              << hints.at(randomIndex).number << " Which gives you "
+              << hints.at(randomIndex).score << " points." << std::endl;
   }
 }
 
@@ -1295,7 +1312,8 @@ void GameEngine::aiMove()
     std::uniform_int_distribution<int> uniform_dist(0, maxHints.size() - 1);
     int randomIndex = uniform_dist(engine);
     //Pick a random hint to place the tile
-    std::string location = numberToLetter(maxHints.at(randomIndex).letter) + std::to_string(maxHints.at(randomIndex).number);
+    std::string location = numberToLetter(maxHints.at(randomIndex).letter) +
+                           std::to_string(maxHints.at(randomIndex).number);
     std::string tile = maxHints.at(randomIndex).tile->toString2();
     //If tile is in hand, call place Tile
     int index = 0;

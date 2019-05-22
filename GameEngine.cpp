@@ -296,7 +296,7 @@ void GameEngine::drawInitialTiles()
 void GameEngine::mainLoop()
 {
   currentPlayer = &*playerArray[0];
-  while (tileBag.getSize() > 0 && currentPlayer->getHand().getSize() > 0)
+  while (!gameEndCheck())
   {
     if (!isSinglePlayer || currentTurn % 2 == 0)
     {
@@ -1137,6 +1137,15 @@ void GameEngine::giveHint()
     std::cout << "Place Tile: " << hints.at(randomIndex).tile->getColour() << hints.at(randomIndex).tile->getShape()
               << " at " << numberToLetter(hints.at(randomIndex).letter) << hints.at(randomIndex).number << " Which gives you " << hints.at(randomIndex).score << " points." << std::endl;
   }
+}
+
+bool GameEngine::gameEndCheck() {
+  bool end = false;
+  // checks tile and hand count
+  if(tileBag.getSize() == 0 && currentPlayer -> getHand().getSize() == 0){
+    end = true;
+  }
+  return end;
 }
 
 //Contains the logic of moving an AI by generating hints (possible) tiles placements, reducing that to placements

@@ -50,9 +50,3 @@ Shape Tile::getShape()
 {
     return shape;
 }
-// Test Code for alt imp colour
-//
-// std::string Tile::toString()
-// {
-//     return colour + shape + "\033[0m";
-// }

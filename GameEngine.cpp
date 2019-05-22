@@ -1309,6 +1309,7 @@ void GameEngine::aiMove()
   alternateTurns();
 }
 
+//Checks around a location to check for a tile
 bool GameEngine::checkAroundLocation(int letter, int number)
 {
   bool leftExists = false;

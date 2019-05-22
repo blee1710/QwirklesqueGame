@@ -9,9 +9,9 @@ tail(nullptr)
 }
 
 LinkedList::~LinkedList() {
-  clear();
-  delete head;
-  delete tail;
+  // clear();
+  // delete head;
+  // delete tail;
 }
 
 void LinkedList::addFront(Tile* tile) {

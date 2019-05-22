@@ -344,6 +344,7 @@ void GameEngine::mainLoop()
       aiMove();
     }
   }
+  printBoard();
   std::cout << "Game Over" << std::endl;
   int highestScore = 0;
   std::string winner;
